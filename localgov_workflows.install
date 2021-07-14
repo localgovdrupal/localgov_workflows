@@ -5,13 +5,15 @@
  * Install, update and uninstall functions for the LocalGov Workflow module.
  */
 
-use Drupal\user\Entity\Role;
+use Drupal\Core\Cache\Cache;
+use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
 /**
  * Implements hook_install().
  */
 function localgov_workflows_install() {
+
   // Add workflow to localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
   $workflow_type = $editorial->getTypePlugin();
@@ -29,33 +31,25 @@ function localgov_workflows_install() {
     $editorial->save();
   }
 
-  // Apply permissions.
-  $author_permissions = [
-    'use localgov_editorial transition create_new_draft',
-    'use localgov_editorial transition submit_for_review',
-  ];
-  $editor_permissions = [
-    'use localgov_editorial transition approve',
-    'use localgov_editorial transition archive',
-    'use localgov_editorial transition archived_draft',
-    'use localgov_editorial transition archived_published',
-    'use localgov_editorial transition create_new_draft',
-    'use localgov_editorial transition publish',
-    'use localgov_editorial transition reject',
-    'use localgov_editorial transition submit_for_review',
-    'view any unpublished content',
-    'view latest version',
-  ];
-  if ($author = Role::load('localgov_author')) {
-    foreach ($author_permissions as $permission) {
-      $author->grantPermission($permission);
-    }
-    $author->save();
+  // Enable scheduled transitions for all node bundles.
+  $scheduled_transitions_config = \Drupal::service('config.factory')->getEditable('scheduled_transitions.settings');
+  $bundles = [];
+  foreach ($node_types as $bundle => $node_type) {
+    $bundles[] = [
+      'entity_type' => 'node',
+      'bundle' => $bundle,
+    ];
   }
-  if ($editor = Role::load('localgov_editor')) {
-    foreach ($editor_permissions as $permission) {
-      $editor->grantPermission($permission);
-    }
-    $editor->save();
+  $scheduled_transitions_config->set('bundles', $bundles);
+  $scheduled_transitions_config->save();
+  Cache::invalidateTags([
+    ScheduledTransitionsSettingsForm::SETTINGS_TAG,
+    'config:scheduled_transitions.settings',
+  ]);
+
+  // Reload user permissions defined in hook_localgov_roles_default().
+  $roles = \Drupal::service('module_handler')->invokeAll('localgov_roles_default');
+  foreach ($roles as $role => $permissions) {
+    user_role_grant_permissions($role, $permissions);
   }
 }
