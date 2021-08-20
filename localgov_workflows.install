@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\FileStorage;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
@@ -16,6 +17,16 @@ function localgov_workflows_install() {
 
   // Add workflow to localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
+
+  if (!$editorial) {
+    $config_path = drupal_get_path('module', 'localgov_workflows') . '/config/install';
+    $config_source = new FileStorage($config_path);
+    $config_storage = \Drupal::service('config.storage');
+    $localgov_editorial = $config_source->read('workflows.workflow.localgov_editorial');
+    $config_storage->write('workflows.workflow.localgov_editorial', $localgov_editorial);
+    $editorial = Workflow::load('localgov_editorial');
+  }
+
   $workflow_type = $editorial->getTypePlugin();
 
   $node_types = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
