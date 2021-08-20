@@ -68,7 +68,7 @@ function localgov_workflows_update_9001() {
   // not present.
   if (!Role::load(RolesHelper::CONTRIBUTOR_ROLE)) {
     $config_key = 'user.role.' . RolesHelper::CONTRIBUTOR_ROLE;
-    $source = new FileStorage(__DIR__ . '/../localgov_core/modules/localgov_roles/config/install');
+    $source = new FileStorage(drupal_get_path('module', 'localgov_roles') . /config/install');
     $config_storage = \Drupal::service('config.storage');
     $config_storage->write($config_key, $source->read($config_key));
   }
