@@ -50,6 +50,9 @@ function localgov_workflows_install() {
     'config:scheduled_transitions.settings',
   ]);
 
+  // Ensure contributor role exists.
+  localgov_workflows_update_9001();
+
   // Reload user permissions defined in hook_localgov_roles_default().
   $roles = \Drupal::service('module_handler')->invokeAll('localgov_roles_default');
   foreach ($roles as $role => $permissions) {
@@ -70,6 +73,8 @@ function localgov_workflows_update_9001() {
     $config_key = 'user.role.' . RolesHelper::CONTRIBUTOR_ROLE;
     $source = new FileStorage(drupal_get_path('module', 'localgov_roles') . '/config/install');
     $config_storage = \Drupal::service('config.storage');
-    $config_storage->write($config_key, $source->read($config_key));
+    $contributor_config = $source->read($config_key);
+    $contributor_config = ['uuid' => \Drupal::service('uuid')->generate()] + $contributor_config;
+    $config_storage->write($config_key, $contributor_config);
   }
 }
