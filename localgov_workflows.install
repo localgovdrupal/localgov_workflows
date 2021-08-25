@@ -14,7 +14,7 @@ use Drupal\workflows\Entity\Workflow;
  */
 function localgov_workflows_install() {
 
-  // Add workflow to localgov_ node bundles with no other workflow.
+  // Configure workflow for localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
   $workflow_type = $editorial->getTypePlugin();
 
@@ -22,8 +22,13 @@ function localgov_workflows_install() {
   $changed = FALSE;
   foreach ($node_types as $type_name => $node_type) {
     if (strpos($type_name, 'localgov_') === 0 && empty($node_type['workflow'])) {
+
+      // Add workflow.
       $workflow_type->addEntityTypeAndBundle('node', $type_name);
       $changed = TRUE;
+
+      // Add last and next review dates to node.
+      localgov_workflows_add_review_to_content_type($type_name);
     }
   }
 
