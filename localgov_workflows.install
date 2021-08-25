@@ -7,21 +7,32 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
 /**
  * Implements hook_install().
  */
-function localgov_workflows_install() {
+function localgov_workflows_install($is_syncing) {
 
   // Add workflow to localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
   if (!$editorial) {
-    $config_source = new FileStorage(drupal_get_path('module', 'localgov_workflows') . '/config/install');
-    $editorial_config = $config_source->read('workflows.workflow.localgov_editorial');
+    $config_key = 'workflows.workflow.localgov_editorial';
+    if ($is_syncing) {
+      // If syncing config try to load the workflow from exported config.
+      $config_source = new FileStorage(Settings::get('config_sync_directory'));
+      $editorial_config = $config_source->read($config_key);
+    }
+    if (!$is_syncing || !$editorial_config) {
+      // If workflow doesn't already exist load it from this module.
+      $config_source = new FileStorage(drupal_get_path('module', 'localgov_workflows') . '/config/install');
+      $editorial_config = $config_source->read($config_key);
+      $editorial_config = ['uuid' => \Drupal::service('uuid')->generate()] + $editorial_config;
+    }
     $config_storage = \Drupal::service('config.storage');
-    $config_storage->write('workflows.workflow.localgov_editorial', $editorial_config);
+    $config_storage->write($config_key, $editorial_config);
     $editorial = Workflow::load('localgov_editorial');
   }
 
