@@ -72,9 +72,9 @@ function localgov_workflows_update_9001() {
   if (!Role::load(RolesHelper::CONTRIBUTOR_ROLE)) {
     $config_key = 'user.role.' . RolesHelper::CONTRIBUTOR_ROLE;
     $source = new FileStorage(drupal_get_path('module', 'localgov_roles') . '/config/install');
-    $config_storage = \Drupal::service('config.storage');
     $contributor_config = $source->read($config_key);
-    $contributor_config = ['uuid' => \Drupal::service('uuid')->generate()] + $contributor_config;
-    $config_storage->write($config_key, $contributor_config);
+    \Drupal::entityTypeManager()->getStorage('user_role')
+      ->create($contributor_config)
+      ->save();
   }
 }
