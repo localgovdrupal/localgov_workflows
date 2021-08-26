@@ -29,10 +29,10 @@ function localgov_workflows_install($is_syncing) {
       // If workflow doesn't already exist load it from this module.
       $config_source = new FileStorage(drupal_get_path('module', 'localgov_workflows') . '/config/install');
       $editorial_config = $config_source->read($config_key);
-      $editorial_config = ['uuid' => \Drupal::service('uuid')->generate()] + $editorial_config;
     }
-    $config_storage = \Drupal::service('config.storage');
-    $config_storage->write($config_key, $editorial_config);
+    \Drupal::entityTypeManager()->getStorage('workflow')
+      ->create($editorial_config)
+      ->save();
     $editorial = Workflow::load('localgov_editorial');
   }
 
