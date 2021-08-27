@@ -7,9 +7,8 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
-use Drupal\Core\Config\FileStorage;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\localgov_roles\RolesHelper;
 use Drupal\node\NodeTypeInterface;
 use Drupal\workflows\Entity\Workflow;
@@ -135,95 +134,22 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
 }
 
 /**
- * Implements hook_form_alter().
+ * Implements hook_entity_base_field_info().
  */
-function localgov_workflows_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function localgov_workflows_entity_base_field_info(EntityTypeInterface $entity_type) {
 
-  $x = 0;
-  if (isset($form['localgov_last_review_date']) && isset($form['localgov_next_review_date'])) {
-    $form['review_status'] = [
-      '#type' => 'details',
-      '#title' => t('Review status'),
-      '#summary' => 'Review status dates',
-      '#group' => 'advanced',
-      '#weight' => -5,
-    ];
-    $form['localgov_last_review_date']['#group'] = 'review_status';
-    $form['localgov_next_review_date']['#group'] = 'review_status';
-    $form['actions']['reviewed'] = [
-      '#type' => 'checkbox',
-      '#title' => 'Content reviewed',
-      '#default' => FALSE,
-    ];
+  // Add the review status field to all nodes.
+  // This needs to be restricted to only nodes used with localgov_workflows.
+  if ($entity_type->id() === 'node') {
+    $fields['review_status'] = BaseFieldDefinition::create('review_status')
+      ->setLabel(t('Review status'))
+      ->setDisplayOptions('form', [
+        'type' => 'review_status',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setComputed(TRUE);
+
+    return $fields;
   }
-}
-
-/**
- * Add next and last review date fields to content type.
- *
- * @param string $bundle
- *   Machine name of content type.
- */
-function localgov_workflows_add_review_to_content_type($bundle) {
-  $config_directory = new FileStorage(__DIR__ . '/config/install');
-
-  $fields = [
-    'localgov_last_review_date' => [
-      'label' => 'Last reviewed',
-      'description' => 'Date and time the content was last reviewed.',
-    ],
-    'localgov_next_review_date' => [
-      'label' => 'Next review',
-      'description' => 'Date and time this content is next due to be reviewed.',
-    ],
-  ];
-
-  foreach ($fields as $field => $config) {
-
-    // Load / create field storage.
-    $field_storage = FieldStorageConfig::loadByName('node', $field);
-    if (empty($field_storage)) {
-      $field_storage = $config_directory->read('field.storage.node.' . $field);
-      FieldStorageConfig::create($field_storage)->save();
-    }
-
-    // Add field to the content type.
-    if (empty(FieldConfig::loadByName('node', $bundle, $field))) {
-      FieldConfig::create([
-        'field_name' => $field,
-        'entity_type' => 'node',
-        'bundle' => $bundle,
-        'label' => $config['label'],
-        'description' => $config['description'],
-        'required' => FALSE,
-      ])->save();
-    }
-  }
-
-  // Hide fields on all page view modes.
-  $view_modes = \Drupal::service('entity_display.repository')
-    ->getViewModeOptionsByBundle('node', $bundle);
-  foreach ($view_modes as $mode => $label) {
-    $view_display = \Drupal::entityTypeManager()
-      ->getStorage('entity_view_display')
-      ->load('node.' . $bundle . '.' . $mode);
-    foreach ($fields as $field => $config) {
-      $view_display->setComponent($field, [
-        'region' => 'hidden',
-      ]);
-    }
-    $view_display->save();
-  }
-
-  // Configure fields in form display.
-  $form_display = \Drupal::entityTypeManager()
-    ->getStorage('entity_form_display')
-    ->load('node.' . $bundle . '.default');
-  foreach ($fields as $field => $config) {
-    $form_display->setComponent($field, [
-      'type' => 'datetime_default',
-      'region' => 'content',
-    ]);
-  }
-  $form_display->save();
 }

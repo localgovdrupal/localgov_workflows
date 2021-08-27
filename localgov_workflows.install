@@ -26,9 +26,6 @@ function localgov_workflows_install() {
       // Add workflow.
       $workflow_type->addEntityTypeAndBundle('node', $type_name);
       $changed = TRUE;
-
-      // Add last and next review dates to node.
-      localgov_workflows_add_review_to_content_type($type_name);
     }
   }
 
