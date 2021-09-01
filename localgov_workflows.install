@@ -6,18 +6,39 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Site\Settings;
+use Drupal\localgov_roles\RolesHelper;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
+use Drupal\user\Entity\Role;
 use Drupal\workflows\Entity\Workflow;
 
 /**
  * Implements hook_install().
  */
-function localgov_workflows_install() {
+function localgov_workflows_install($is_syncing) {
 
   // Add workflow to localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
-  $workflow_type = $editorial->getTypePlugin();
+  if (!$editorial) {
+    $config_key = 'workflows.workflow.localgov_editorial';
+    if ($is_syncing) {
+      // If syncing config try to load the workflow from exported config.
+      $config_source = new FileStorage(Settings::get('config_sync_directory'));
+      $editorial_config = $config_source->read($config_key);
+    }
+    if (!$is_syncing || !$editorial_config) {
+      // If workflow doesn't already exist load it from this module.
+      $config_source = new FileStorage(drupal_get_path('module', 'localgov_workflows') . '/config/install');
+      $editorial_config = $config_source->read($config_key);
+    }
+    \Drupal::entityTypeManager()->getStorage('workflow')
+      ->create($editorial_config)
+      ->save();
+    $editorial = Workflow::load('localgov_editorial');
+  }
 
+  $workflow_type = $editorial->getTypePlugin();
   $node_types = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
   $changed = FALSE;
   foreach ($node_types as $type_name => $node_type) {
@@ -47,9 +68,31 @@ function localgov_workflows_install() {
     'config:scheduled_transitions.settings',
   ]);
 
+  // Ensure contributor role exists.
+  localgov_workflows_update_9001();
+
   // Reload user permissions defined in hook_localgov_roles_default().
   $roles = \Drupal::service('module_handler')->invokeAll('localgov_roles_default');
   foreach ($roles as $role => $permissions) {
     user_role_grant_permissions($role, $permissions);
+  }
+}
+
+/**
+ * Install the contributor role if it doesn't exist.
+ */
+function localgov_workflows_update_9001() {
+
+  // Workflow assumes that editor, author and contributor roles exists. The
+  // first two have been included in the LocalGov Roles module from the
+  // beginning, but the contributor role is new and so should be added if it's
+  // not present.
+  if (!Role::load(RolesHelper::CONTRIBUTOR_ROLE)) {
+    $config_key = 'user.role.' . RolesHelper::CONTRIBUTOR_ROLE;
+    $source = new FileStorage(drupal_get_path('module', 'localgov_roles') . '/config/install');
+    $contributor_config = $source->read($config_key);
+    \Drupal::entityTypeManager()->getStorage('user_role')
+      ->create($contributor_config)
+      ->save();
   }
 }
