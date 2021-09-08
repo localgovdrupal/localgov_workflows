@@ -2,9 +2,15 @@
 
 namespace Drupal\localgov_workflows\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\localgov_workflows\Form\WorkflowsSettingsForm;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * Plugin implementation of the 'review_status' widget.
@@ -18,12 +24,42 @@ use Drupal\Core\Form\FormStateInterface;
  *   },
  * )
  */
-class ReviewStatusWidget extends WidgetBase {
+class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The config factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ConfigFactory $config_factory) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $config = $this->configFactory->get('localgov_workflows.settings');
 
     $element['reviewed'] = [
       '#type' => 'checkbox',
@@ -35,14 +71,8 @@ class ReviewStatusWidget extends WidgetBase {
       '#type' => 'select',
       '#title' => t('Next review in'),
       '#description' => t('When is this content next due to be reviewed.'),
-      '#options' => [
-        3 => t('3 months'),
-        6 => t('6 months'),
-        12 => t('1 year'),
-        24 => t('2 years'),
-        36 => t('3 years'),
-      ],
-      '#default_value' => 12,
+      '#options' => WorkflowsSettingsForm::getNextReviewOptions(),
+      '#default_value' => $config->get('default_next_review') ?? 12,
     ];
 
     // Add to advanced settings.

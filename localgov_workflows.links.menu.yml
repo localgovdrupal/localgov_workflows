@@ -1,0 +1,5 @@
+localgov_workflows.settings_form:
+  title: 'LocalGov Workflows'
+  route_name: localgov_workflows.settings_form
+  description: 'Configure LocalgGov workflows.'
+  parent: system.admin_config_workflow
