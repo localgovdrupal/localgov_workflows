@@ -46,7 +46,7 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    *
    * @return boolean
    */
-  public function isActive();
+  public function isActive(): bool;
 
   /**
    * Gets the user who reviewed the content.
@@ -60,7 +60,7 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    *
    * @return int
    */
-  public function getCreated();
+  public function getCreatedTime(): int;
 
   /**
    * Gets the entity that has been reviewed.
@@ -68,6 +68,13 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    */
   public function getEntity(): EntityInterface;
+
+  /**
+   * Gets the timestamp when the content is next due to be reviewed.
+   *
+   * @return int
+   */
+  public function getReviewTime(): int;
 
   /**
    * Gets the scheduled transition entity that moves the content to review.]

@@ -48,7 +48,7 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
       ->setScheduledTransition($transition)
       ->setAuthor($author)
       ->setActive($active)
-      ->setCreated(time());
+      ->setCreatedTime(time());
 
     return $review_status;
   }
@@ -69,8 +69,8 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
   /**
    * {@inheritdoc}
    */
-  public function isActive() {
-    return $this->get('active');
+  public function isActive(): bool {
+    return $this->get('active')->value;
   }
 
   /**
@@ -99,14 +99,14 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCreated() {
-    return $this->get('created');
+  public function getCreatedTime(): int {
+    return $this->get('created')->value;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setCreated($created) {
+  protected function setCreatedTime($created) {
     $this->set('created', $created);
     return $this;
   }
@@ -129,6 +129,21 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
   /**
    * {@inheritdoc}
    */
+  public function getReviewTime(): int {
+    return $this->get('review')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setReviewTime($review) {
+    $this->set('review', $review);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getScheduledTransition(): ?ScheduledTransitionInterface {
     return $this->get('transition')->entity;
   }
@@ -138,6 +153,7 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
    */
   public function setScheduledTransition(ScheduledTransitionInterface $transition) {
     $this->set('transition', $transition->id());
+    $this->setReviewTime($transition->getTransitionTime());
     return $this;
   }
 
@@ -168,9 +184,15 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['active'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Active'))
-      ->setDescription(t('The current active review status for the given entity.'));
+    $fields['entity'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Entity'))
+      ->setDescription(t('The entity that has been reviewed.'))
+      ->setSetting('target_type', 'node');
+
+    $fields['transition'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Review scheduled transition'))
+      ->setDescription(t('The scheduled transition that will run on review date.'))
+      ->setSetting('target_type', 'scheduled_transition');
 
     $fields['author'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(\t('Author'))
@@ -181,19 +203,13 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
 
-    $fields['entity'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Entity'))
-      ->setDescription(t('The entity that has been reviewed.'))
-      ->setSetting('target_type', 'node');
+    $fields['review'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(t('Review'))
+      ->setDescription(t('The time that the entity should be reviewed.'));
 
-    $fields['transition'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Review scheduled transition'))
-      ->setDescription(t('The scheduled transition that will run on review date.'))
-      ->setSetting('target_type', 'scheduled_transition')
-      ->setDisplayOptions('form', [
-        'type' => 'datetime_timestamp',
-        'weight' => 10,
-      ]);
+    $fields['active'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Active'))
+      ->setDescription(t('The current active review status for the given entity.'));
 
     return $fields;
   }
