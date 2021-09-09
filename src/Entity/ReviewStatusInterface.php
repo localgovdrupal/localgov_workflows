@@ -38,13 +38,15 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    *   The entity that has been reviewed.
    *
    * @return \Drupal\localgov_workflows\Entity\ReviewStatus|null
+   *   The status.
    */
   public static function getActiveReviewStatus(EntityInterface $entity): ?ReviewStatus;
 
   /**
    * Is this the current active review status.
    *
-   * @return boolean
+   * @return bool
+   *   Boolean, TRUE if active.
    */
   public function isActive(): bool;
 
@@ -52,6 +54,7 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * Gets the user who reviewed the content.
    *
    * @return \Drupal\Core\Session\AccountInterface
+   *   The user account.
    */
   public function getAuthor(): AccountInterface;
 
@@ -59,6 +62,7 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * Gets the timestamp when the content was reviewed.
    *
    * @return int
+   *   The timestamp.
    */
   public function getCreatedTime(): int;
 
@@ -66,6 +70,7 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * Gets the entity that has been reviewed.
    *
    * @return \Drupal\Core\Entity\EntityInterface
+   *   The content entity that has been reviewed.
    */
   public function getEntity(): EntityInterface;
 
@@ -73,13 +78,15 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * Gets the timestamp when the content is next due to be reviewed.
    *
    * @return int
+   *   The timestamp.
    */
   public function getReviewTime(): int;
 
   /**
-   * Gets the scheduled transition entity that moves the content to review.]
+   * Gets the scheduled transition entity that moves the content to review.
    *
    * @return \Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface|null
+   *   The scheduled transition entity.
    */
   public function getScheduledTransition(): ?ScheduledTransitionInterface;
 
@@ -87,8 +94,11 @@ interface ReviewStatusInterface extends ContentEntityInterface {
    * Sets the scheduled transition entity associated with reviewing the content.
    *
    * @param \Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface $transition
+   *   The scheduled transition entity.
    *
    * @return \Drupal\localgov_workflows\Entity\ReviewStatus
+   *   The review status.
    */
   public function setScheduledTransition(ScheduledTransitionInterface $transition);
+
 }

@@ -5,6 +5,9 @@ namespace Drupal\localgov_workflows\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+/**
+ * Settings form for workflow defaults.
+ */
 class WorkflowsSettingsForm extends ConfigFormBase {
 
   /**
@@ -48,7 +51,7 @@ class WorkflowsSettingsForm extends ConfigFormBase {
     // Default content next review time.
     $form['default_next_review'] = [
       '#type' => 'select',
-      '#title' => t('Default next review date'),
+      '#title' => $this->t('Default next review date'),
       '#options' => static::getNextReviewOptions(),
       '#default_value' => $config->get('default_next_review') ?? 12,
     ];
@@ -67,4 +70,5 @@ class WorkflowsSettingsForm extends ConfigFormBase {
 
     parent::submitForm($form, $form_state);
   }
+
 }

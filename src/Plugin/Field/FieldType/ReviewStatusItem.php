@@ -10,6 +10,8 @@ use Drupal\scheduled_transitions\Entity\ScheduledTransition;
 use Drupal\workflows\Entity\Workflow;
 
 /**
+ * Review status field.
+ *
  * @FieldType(
  *   id = "review_status",
  *   label = @Translation("Review Status"),
@@ -37,7 +39,7 @@ class ReviewStatusItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
-    return  [];
+    return [];
   }
 
   /**
@@ -112,13 +114,13 @@ class ReviewStatusItem extends FieldItemBase {
     ];
 
     $scheduled_transition = ScheduledTransition::create([
-      'entity' =>  $entity,
+      'entity' => $entity,
       'entity_revision_id' => 0,
       'entity_revision_langcode' => $entity->language(),
       'author' => $current_user,
       'workflow' => $workflow->id(),
       'moderation_state' => ReviewStatus::REVIEW_STATE,
-      'transition_on' =>  $review_date,
+      'transition_on' => $review_date,
       'options' => [
         $options,
       ],
@@ -127,4 +129,5 @@ class ReviewStatusItem extends FieldItemBase {
 
     return $scheduled_transition;
   }
+
 }

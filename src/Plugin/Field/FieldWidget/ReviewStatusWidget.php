@@ -11,7 +11,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\localgov_workflows\Form\WorkflowsSettingsForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
 /**
  * Plugin implementation of the 'review_status' widget.
  *
@@ -64,13 +63,13 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
     $element['reviewed'] = [
       '#type' => 'checkbox',
       '#title' => 'Content reviewed',
-      '#description' => t('I have reviewed this content.'),
+      '#description' => $this->t('I have reviewed this content.'),
       '#default' => FALSE,
     ];
     $element['next_review'] = [
       '#type' => 'select',
-      '#title' => t('Next review in'),
-      '#description' => t('When is this content next due to be reviewed.'),
+      '#title' => $this->t('Next review in'),
+      '#description' => $this->t('When is this content next due to be reviewed.'),
       '#options' => WorkflowsSettingsForm::getNextReviewOptions(),
       '#default_value' => $config->get('default_next_review') ?? 12,
     ];
@@ -79,7 +78,7 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
     if (isset($form['advanced'])) {
       $element += [
         '#type' => 'details',
-        '#title' => t('Review status'),
+        '#title' => $this->t('Review status'),
         '#group' => 'advanced',
       ];
       $element['#weight'] = -5;
@@ -87,4 +86,5 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
 
     return $element;
   }
+
 }
