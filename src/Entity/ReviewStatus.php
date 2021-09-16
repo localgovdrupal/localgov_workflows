@@ -24,7 +24,10 @@ use Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface;
  *     "uuid" = "uuid",
  *     "uid" = "author",
  *   },
- *   admin_permission = "administer review status entities",
+ *   handlers = {
+ *     "views_data" = "Drupal\views\EntityViewsData",
+ *   },
+ *   admin_permission = "administer localgov workflows",
  * )
  */
 class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
