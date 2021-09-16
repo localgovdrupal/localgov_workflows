@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\localgov_workflows\Entity\ReviewStatus;
 use Drupal\localgov_workflows\Form\WorkflowsSettingsForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -58,20 +59,54 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory->get('localgov_workflows.settings');
 
+    // Get current review status object.
+    $entity = $items->getEntity();
+    $review_status = ReviewStatus::getActiveReviewStatus($entity);
+
+    // Calculate next review date.
+    $config = $this->configFactory->get('localgov_workflows.settings');
+    $next_review = $config->get('default_next_review') ?? 12;
+    $review_date = strtotime('+' . $next_review . ' months');
+
+    // Add form items.
     $element['reviewed'] = [
       '#type' => 'checkbox',
       '#title' => 'Content reviewed',
       '#description' => $this->t('I have reviewed this content.'),
       '#default' => FALSE,
     ];
-    $element['next_review'] = [
+    $element['review_in'] = [
       '#type' => 'select',
       '#title' => $this->t('Next review in'),
-      '#description' => $this->t('When is this content next due to be reviewed.'),
       '#options' => WorkflowsSettingsForm::getNextReviewOptions(),
-      '#default_value' => $config->get('default_next_review') ?? 12,
+      '#default_value' => $next_review,
+      '#attributes' => [
+        'class' => ['review-status-review-in'],
+      ],
+    ];
+    $element['review_date'] = [
+      '#type' => 'date',
+      '#title' => $this->t('Review date'),
+      '#description' => $this->t('When is this content next due to be reviewed.'),
+      '#default_value' => date('Y-m-d', $review_date),
+      '#attributes' => [
+        'class' => ['review-status-review-date'],
+      ],
+    ];
+    $form['last_review'] = [
+      '#type' => 'hidden',
+      '#value' => is_null($review_status) ? '' : date('Y-m-d', $review_status->getCreatedTime()),
+      '#attributes' => [
+        'class' => ['review-status-last-review'],
+      ],
+    ];
+    $form['next_review'] = [
+      '#type' => 'hidden',
+      '#value' => is_null($review_status) ? '' : date('Y-m-d', $review_status->getReviewTime()),
+      '#attributes' => [
+        'class' => ['review-status-next-review'],
+      ],
     ];
 
     // Add to advanced settings.
@@ -80,6 +115,12 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
         '#type' => 'details',
         '#title' => $this->t('Review status'),
         '#group' => 'advanced',
+        '#attributes' => [
+          'class' => ['review-status-form'],
+        ],
+        '#attached' => [
+          'library' => ['localgov_workflows/localgov_workflows.review_status'],
+        ],
       ];
       $element['#weight'] = -5;
     }

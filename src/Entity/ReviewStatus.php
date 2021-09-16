@@ -61,6 +61,10 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
    */
   public static function getActiveReviewStatus(EntityInterface $entity): ?ReviewStatus {
 
+    if (!$entity->id()) {
+      return NULL;
+    }
+
     $review_status_storage = \Drupal::entityTypeManager()->getStorage('review_status');
     $review_status = current($review_status_storage->loadByProperties(
       [
@@ -68,6 +72,7 @@ class ReviewStatus extends ContentEntityBase implements ReviewStatusInterface {
         'active' => TRUE,
       ]
     ));
+
     if ($review_status instanceof ReviewStatus) {
       return $review_status;
     }
