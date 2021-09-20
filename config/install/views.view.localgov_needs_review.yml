@@ -3,6 +3,9 @@ status: true
 dependencies:
   config:
     - system.menu.main
+  enforced:
+    module:
+      - localgov_workflows
   module:
     - localgov_workflows
     - node
