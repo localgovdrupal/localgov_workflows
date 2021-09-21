@@ -103,7 +103,7 @@ function localgov_workflows_update_9001() {
 /**
  * Install the needs review view if it doesn't exist.
  */
-function localgov_workflows_update_9002() {
+function localgov_workflows_update_9004() {
 
   $view_name = 'localgov_needs_review';
   if (is_null(Views::getView($view_name))) {

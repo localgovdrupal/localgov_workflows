@@ -136,20 +136,30 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
 /**
  * Implements hook_entity_base_field_info().
  */
-function localgov_workflows_entity_base_field_info(EntityTypeInterface $entity_type) {
+function localgov_workflows_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
 
-  // Add the review status field to all nodes.
-  // This needs to be restricted to only nodes used with localgov_workflows.
+  // Add the review status field to nodes configured for scheduled transitions.
   if ($entity_type->id() === 'node') {
-    $fields['review_status'] = BaseFieldDefinition::create('review_status')
-      ->setLabel(t('Review status'))
-      ->setDisplayOptions('form', [
-        'type' => 'review_status',
-        'weight' => -5,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setComputed(TRUE);
+    $scheduled_config = \Drupal::service('config.factory')->get('scheduled_transitions.settings');
 
-    return $fields;
+    if (is_null($scheduled_config)) {
+      return;
+    }
+
+    $scheduled_bundles = $scheduled_config->get('bundles');
+    foreach ($scheduled_bundles as $scheduled_bundle) {
+      if ($scheduled_bundle['entity_type'] == $entity_type->id() && $scheduled_bundle['bundle'] == $bundle) {
+        $fields['review_status'] = BaseFieldDefinition::create('review_status')
+          ->setLabel(t('Review status'))
+          ->setDisplayOptions('form', [
+            'type' => 'review_status',
+            'weight' => -5,
+          ])
+          ->setDisplayConfigurable('form', TRUE)
+          ->setComputed(TRUE);
+
+        return $fields;
+      }
+    }
   }
 }
