@@ -75,15 +75,12 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#title' => 'Content reviewed',
       '#description' => $this->t('I have reviewed this content.'),
       '#default' => FALSE,
-      '#attributes' => [
-        'name' => 'review_status_reviewed',
-      ],
     ];
     $element['review'] = [
       '#type' => 'container',
       '#states' => [
         'visible' => [
-          ':input[name="review_status_reviewed"]' => [
+          ':input[name="review_status[0][reviewed]"]' => [
             'checked' => TRUE,
           ],
         ],
