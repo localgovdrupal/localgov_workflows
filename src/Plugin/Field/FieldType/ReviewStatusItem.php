@@ -29,7 +29,7 @@ class ReviewStatusItem extends FieldItemBase {
 
     $properties['reviewed'] = DataDefinition::create('boolean')
       ->setLabel(t('Reviewed'));
-    $properties['review_date'] = DataDefinition::create('string')
+    $properties['review'] = DataDefinition::create('any')
       ->setLabel(t('Next review date'));
 
     return $properties;
@@ -46,7 +46,7 @@ class ReviewStatusItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    return ($this->reviewed === NULL || $this->reviewed === '') && ($this->next_review === NULL || $this->next_review === '');
+    return ($this->reviewed === NULL || $this->reviewed === '') && ($this->review === NULL || $this->review === '');
   }
 
   /**
@@ -73,7 +73,7 @@ class ReviewStatusItem extends FieldItemBase {
         // create a new one.
         $scheduled_transition = $active_review_status->getScheduledTransition();
         if ($scheduled_transition) {
-          $next_review = strtotime($this->review_date);
+          $next_review = strtotime($this->review['review_date']);
           $scheduled_transition->setTransitionTime($next_review);
           $scheduled_transition->save();
         }
@@ -108,7 +108,7 @@ class ReviewStatusItem extends FieldItemBase {
     $entity = $this->getEntity();
     $workflow = Workflow::load('localgov_editorial');
     $current_user = \Drupal::currentUser()->id();
-    $next_review = strtotime($this->review_date);
+    $next_review = strtotime($this->review['review_date']);
     $options = [
       ScheduledTransition::OPTION_LATEST_REVISION => TRUE,
     ];

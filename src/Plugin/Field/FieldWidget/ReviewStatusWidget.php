@@ -75,8 +75,21 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
       '#title' => 'Content reviewed',
       '#description' => $this->t('I have reviewed this content.'),
       '#default' => FALSE,
+      '#attributes' => [
+        'name' => 'review_status_reviewed',
+      ],
     ];
-    $element['review_in'] = [
+    $element['review'] = [
+      '#type' => 'container',
+      '#states' => [
+        'visible' => [
+          ':input[name="review_status_reviewed"]' => [
+            'checked' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    $element['review']['review_in'] = [
       '#type' => 'select',
       '#title' => $this->t('Next review in'),
       '#options' => WorkflowsSettingsForm::getNextReviewOptions(),
@@ -85,7 +98,7 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
         'class' => ['review-status-review-in'],
       ],
     ];
-    $element['review_date'] = [
+    $element['review']['review_date'] = [
       '#type' => 'date',
       '#title' => $this->t('Review date'),
       '#description' => $this->t('When is this content next due to be reviewed.'),
