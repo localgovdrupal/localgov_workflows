@@ -140,13 +140,17 @@ function localgov_workflows_entity_bundle_field_info(EntityTypeInterface $entity
 
   // Add the review status field to nodes configured for scheduled transitions.
   if ($entity_type->id() === 'node') {
-    $scheduled_config = \Drupal::service('config.factory')->get('scheduled_transitions.settings');
 
+    $scheduled_config = \Drupal::service('config.factory')->get('scheduled_transitions.settings');
     if (is_null($scheduled_config)) {
       return;
     }
 
     $scheduled_bundles = $scheduled_config->get('bundles');
+    if (is_null($scheduled_bundles)) {
+      return;
+    }
+
     foreach ($scheduled_bundles as $scheduled_bundle) {
       if ($scheduled_bundle['entity_type'] == $entity_type->id() && $scheduled_bundle['bundle'] == $bundle) {
         $fields['review_status'] = BaseFieldDefinition::create('review_status')
