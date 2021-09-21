@@ -111,10 +111,13 @@ function localgov_workflows_update_9001() {
  */
 function localgov_workflows_update_9003() {
 
-  \Drupal::service('module_installer')->install(['diff']);
-  $config = \Drupal::configFactory()->getEditable('diff.settings');
-  $settings = $config->get('general_settings');
-  $settings['visual_inline_theme'] = 'admin';
-  $config->set('general_settings', $settings);
-  $config->save();
+  // Enable and configure the Diff module if it's not already enabled.
+  if (!\Drupal::moduleHandler()->moduleExists('diff')) {
+    \Drupal::service('module_installer')->install(['diff']);
+    $config = \Drupal::configFactory()->getEditable('diff.settings');
+    $settings = $config->get('general_settings');
+    $settings['visual_inline_theme'] = 'admin';
+    $config->set('general_settings', $settings);
+    $config->save();
+  }
 }
