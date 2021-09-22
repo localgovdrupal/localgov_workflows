@@ -71,6 +71,15 @@ function localgov_workflows_install($is_syncing) {
   // Ensure contributor role exists.
   localgov_workflows_update_9001();
 
+  // Use the admin theme when checking diffs.
+  if (\Drupal::moduleHandler()->moduleExists('diff')) {
+    $config = \Drupal::configFactory()->getEditable('diff.settings');
+    $settings = $config->get('general_settings');
+    $settings['visual_inline_theme'] = 'admin';
+    $config->set('general_settings', $settings);
+    $config->save();
+  }
+
   // Reload user permissions defined in hook_localgov_roles_default().
   $roles = \Drupal::service('module_handler')->invokeAll('localgov_roles_default');
   foreach ($roles as $role => $permissions) {
@@ -123,6 +132,22 @@ function localgov_workflows_update_9002() {
 
   if ($updated) {
     $config->set('dependencies', $dependencies);
+    $config->save();
+  }
+}
+
+/**
+ * Enable Diff module and configure it to use the admin theme.
+ */
+function localgov_workflows_update_9003() {
+
+  // Enable and configure the Diff module if it's not already enabled.
+  if (!\Drupal::moduleHandler()->moduleExists('diff')) {
+    \Drupal::service('module_installer')->install(['diff']);
+    $config = \Drupal::configFactory()->getEditable('diff.settings');
+    $settings = $config->get('general_settings');
+    $settings['visual_inline_theme'] = 'admin';
+    $config->set('general_settings', $settings);
     $config->save();
   }
 }
