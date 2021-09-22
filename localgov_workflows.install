@@ -136,7 +136,6 @@ function localgov_workflows_update_9002() {
   }
 }
 
-
 /**
  * Enable Diff module and configure it to use the admin theme.
  */
