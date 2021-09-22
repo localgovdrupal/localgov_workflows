@@ -9,6 +9,7 @@ dependencies:
   - drupal:datetime
   - drupal:node
   - drupal:views
+  - diff:diff
   - preview_link:preview_link
   - responsive_preview:responsive_preview
   - scheduled_transitions:scheduled_transitions

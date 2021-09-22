@@ -74,6 +74,15 @@ function localgov_workflows_install($is_syncing) {
   // Ensure contributor role exists.
   localgov_workflows_update_9001();
 
+  // Use the admin theme when checking diffs.
+  if (\Drupal::moduleHandler()->moduleExists('diff')) {
+    $config = \Drupal::configFactory()->getEditable('diff.settings');
+    $settings = $config->get('general_settings');
+    $settings['visual_inline_theme'] = 'admin';
+    $config->set('general_settings', $settings);
+    $config->save();
+  }
+
   // Reload user permissions defined in hook_localgov_roles_default().
   $roles = \Drupal::service('module_handler')->invokeAll('localgov_roles_default');
   foreach ($roles as $role => $permissions) {
@@ -97,6 +106,53 @@ function localgov_workflows_update_9001() {
     \Drupal::entityTypeManager()->getStorage('user_role')
       ->create($contributor_config)
       ->save();
+  }
+}
+
+
+/**
+ * Ensure approvals dashboard view is removed when uninstalling the module.
+ */
+function localgov_workflows_update_9002() {
+
+  // Add enforced dependency to localgov_workflows approvals dashboard view.
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('views.view.localgov_approvals_dashboard');
+  $dependencies = $config->get('dependencies');
+
+  $updated = FALSE;
+  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'])) {
+    $dependencies['enforced']['module'][] = 'localgov_workflows';
+    $updated = TRUE;
+  }
+  elseif (!isset($dependencies['enforced'])) {
+    $dependencies['enforced'] = [
+      'module' => [
+        'localgov_workflows',
+      ],
+    ];
+    $updated = TRUE;
+  }
+
+  if ($updated) {
+    $config->set('dependencies', $dependencies);
+    $config->save();
+  }
+}
+
+/**
+ * Enable Diff module and configure it to use the admin theme.
+ */
+function localgov_workflows_update_9003() {
+
+  // Enable and configure the Diff module if it's not already enabled.
+  if (!\Drupal::moduleHandler()->moduleExists('diff')) {
+    \Drupal::service('module_installer')->install(['diff']);
+    $config = \Drupal::configFactory()->getEditable('diff.settings');
+    $settings = $config->get('general_settings');
+    $settings['visual_inline_theme'] = 'admin';
+    $config->set('general_settings', $settings);
+    $config->save();
   }
 }
 
