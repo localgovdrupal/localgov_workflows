@@ -107,6 +107,37 @@ function localgov_workflows_update_9001() {
 }
 
 /**
+ * Ensure approvals dashboard view is removed when uninstalling the module.
+ */
+function localgov_workflows_update_9002() {
+
+  // Add enforced dependency to localgov_workflows approvals dashboard view.
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('views.view.localgov_approvals_dashboard');
+  $dependencies = $config->get('dependencies');
+
+  $updated = FALSE;
+  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'])) {
+    $dependencies['enforced']['module'][] = 'localgov_workflows';
+    $updated = TRUE;
+  }
+  elseif (!isset($dependencies['enforced'])) {
+    $dependencies['enforced'] = [
+      'module' => [
+        'localgov_workflows',
+      ],
+    ];
+    $updated = TRUE;
+  }
+
+  if ($updated) {
+    $config->set('dependencies', $dependencies);
+    $config->save();
+  }
+}
+
+
+/**
  * Enable Diff module and configure it to use the admin theme.
  */
 function localgov_workflows_update_9003() {
