@@ -22,6 +22,7 @@ class ReviewStatusSettingsForm extends ConfigFormBase {
       3 => t('3 months'),
       6 => t('6 months'),
       12 => t('1 year'),
+      18 => t('18 months'),
       24 => t('2 years'),
       36 => t('3 years'),
     ];
