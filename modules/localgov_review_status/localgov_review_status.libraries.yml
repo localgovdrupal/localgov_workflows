@@ -1,4 +1,4 @@
-localgov_workflows.review_status:
+localgov_review_status.review_status:
   js:
     js/review-status.js: {}
   dependencies:

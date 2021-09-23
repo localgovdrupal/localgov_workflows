@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_workflows\Entity;
+namespace Drupal\localgov_review_status\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;

@@ -5,9 +5,9 @@ dependencies:
     - system.menu.main
   enforced:
     module:
-      - localgov_workflows
+      - localgov_review_status
   module:
-    - localgov_workflows
+    - localgov_review_status
     - node
     - user
 id: localgov_needs_review

@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\localgov_workflows\Plugin\Field\FieldType;
+namespace Drupal\localgov_review_status\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\localgov_workflows\Entity\ReviewStatus;
+use Drupal\localgov_review_status\Entity\ReviewStatus;
 use Drupal\scheduled_transitions\Entity\ScheduledTransition;
 use Drupal\workflows\Entity\Workflow;
 

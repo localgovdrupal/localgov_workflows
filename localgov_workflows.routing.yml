@@ -1,7 +1,0 @@
-localgov_workflows.settings_form:
-  path: '/admin/config/workflow/localgov-workflows'
-  defaults:
-    _form: '\Drupal\localgov_workflows\Form\WorkflowsSettingsForm'
-    _title: 'LocalGov Workflows settings'
-  requirements:
-    _permission: 'administer localgov workflows'

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_workflows\Form;
+namespace Drupal\localgov_review_status\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Settings form for workflow defaults.
  */
-class WorkflowsSettingsForm extends ConfigFormBase {
+class ReviewStatusSettingsForm extends ConfigFormBase {
 
   /**
    * Return the next review date options.

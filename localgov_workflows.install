@@ -11,7 +11,6 @@ use Drupal\Core\Site\Settings;
 use Drupal\localgov_roles\RolesHelper;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\user\Entity\Role;
-use Drupal\views\Views;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -153,20 +152,5 @@ function localgov_workflows_update_9003() {
     $settings['visual_inline_theme'] = 'admin';
     $config->set('general_settings', $settings);
     $config->save();
-  }
-}
-
-/**
- * Install the needs review view if it doesn't exist.
- */
-function localgov_workflows_update_9004() {
-
-  $view_name = 'localgov_needs_review';
-  if (is_null(Views::getView($view_name))) {
-    $source = new FileStorage(__DIR__ . '/config/install');
-    $view_config = $source->read('views.view.' . $view_name);
-    \Drupal::entityTypeManager()->getStorage('view')
-      ->create($view_config)
-      ->save();
   }
 }

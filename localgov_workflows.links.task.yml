@@ -3,9 +3,3 @@ localgov_workflows.approvals_dashboard:
   route_name: view.localgov_approvals_dashboard.approvals_dashboard
   parent_id: system.admin_content
   weight: 1
-
-localgov_workflows.needs_review:
-  title: 'Needs review'
-  route_name: view.localgov_needs_review.needs_review
-  parent_id: system.admin_content
-  weight: 2
