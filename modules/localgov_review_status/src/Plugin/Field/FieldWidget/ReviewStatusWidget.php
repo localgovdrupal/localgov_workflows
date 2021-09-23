@@ -65,7 +65,7 @@ class ReviewStatusWidget extends WidgetBase implements ContainerFactoryPluginInt
     $review_status = ReviewStatus::getActiveReviewStatus($entity);
 
     // Calculate next review date.
-    $config = $this->configFactory->get('localgov_workflows.settings');
+    $config = $this->configFactory->get('localgov_review_status.settings');
     $next_review = $config->get('default_next_review') ?? 12;
     $review_date = strtotime('+' . $next_review . ' months');
 

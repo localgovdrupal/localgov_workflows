@@ -31,14 +31,14 @@ class ReviewStatusSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['localgov_workflows.settings'];
+    return ['localgov_review_status.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'localgov_workflows_settings_form';
+    return 'localgov_review_status_settings_form';
   }
 
   /**
@@ -46,7 +46,7 @@ class ReviewStatusSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $config = $this->config('localgov_workflows.settings');
+    $config = $this->config('localgov_review_status.settings');
 
     // Default content next review time.
     $form['default_next_review'] = [
@@ -64,7 +64,7 @@ class ReviewStatusSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $config = $this->config('localgov_workflows.settings');
+    $config = $this->config('localgov_review_status.settings');
     $config->set('default_next_review', $form_state->getValue('default_next_review'));
     $config->save();
 

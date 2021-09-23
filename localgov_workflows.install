@@ -108,7 +108,6 @@ function localgov_workflows_update_9001() {
   }
 }
 
-
 /**
  * Ensure approvals dashboard view is removed when uninstalling the module.
  */
