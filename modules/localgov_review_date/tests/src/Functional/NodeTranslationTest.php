@@ -108,7 +108,7 @@ class NodeTranslationTest extends BrowserTestBase {
     $this->assertEquals(strtotime($cy_review_time), $cy_review_date->getReviewTime());
     $this->assertNotEquals($en_review_date->id(), $cy_review_date->id());
 
-    // Re-review the Welsh tranlsation.
+    // Re-review the Welsh translation.
     $this->drupalGet('cy/node/' . $node->id() . '/edit');
     $cy_rereview_time = date('Y-m-d', strtotime('+12 months'));
     $this->submitForm([
