@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Tests the permissions for review statuses.
  */
-class PermissionsTest extends BrowserTestBase {
+class RoleAccessTest extends BrowserTestBase {
 
   use NodeCreationTrait;
 
@@ -20,18 +20,19 @@ class PermissionsTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'localgov_services_page',
     'localgov_review_date',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
-  protected $profile = 'localgov';
+  protected $profile = 'testing';
 
   /**
    * Example page to test access to.
@@ -39,22 +40,6 @@ class PermissionsTest extends BrowserTestBase {
    * @var \Drupal\node\NodeInterface
    */
   protected NodeInterface $page;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp(): void {
-    parent::setUp();
-
-    $this->page = $this->createNode([
-      'type' => 'localgov_services_page',
-      'title' => 'Test service page',
-      'body' => [
-        'summary' => 'Test service page summary',
-        'value' => 'Test service page text',
-      ],
-    ]);
-  }
 
   /**
    * Test the alert banner user access permissions.
@@ -84,19 +69,25 @@ class PermissionsTest extends BrowserTestBase {
     $user->save();
     $this->drupalLogin($user);
 
-    // Check page editing.
+    // Check page creation.
+    $title = $this->randomString(12);
     $this->drupalGet('node/add/localgov_services_page');
     $assert_session->statusCodeEquals(Response::HTTP_OK);
     $assert_session->elementExists('css', '.review-date-form');
-//    $edit = [
-//      'localgov_review_date[0][reviewed]' => TRUE,
-//      'localgov_review_date[0][review][review_date]' => $date,
-//    ];
-//    $this->submitForm($edit, 'Save');
-//    $assert_session->pageTextContains('has been updated');
-//    print_r($this->getSession()->getPage()->getHtml());
-//    $this->drupalGet('node/' . $this->page->id() . '/edit');
-//    $assert_session->fieldValueEquals('next_review', $date);
+    $edit = [
+      'title[0][value]' => $title,
+      'body[0][summary]' => $this->randomString(12),
+      'body[0][value]' => $this->randomString(12),
+      'localgov_review_date[0][reviewed]' => TRUE,
+      'localgov_review_date[0][review][review_date]' => $date,
+    ];
+    $this->submitForm($edit, 'Save');
+    $page = $this->drupalGetNodeByTitle($title);
+    $this->drupalGet('node/' . $page->id() . '/edit');
+    $assert_session->elementExists('css', '.review-date-form');
+    //print_r($this->getSession()->getPage()->getHtml());
+    $assert_session->hiddenFieldValueEquals('last_review', date('Y-m-d'));
+    $assert_session->hiddenFieldValueEquals('next_review', $date);
 
     $this->drupalLogout();
   }
