@@ -85,9 +85,8 @@ class RoleAccessTest extends BrowserTestBase {
     $page = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $page->id() . '/edit');
     $assert_session->elementExists('css', '.review-date-form');
-    //print_r($this->getSession()->getPage()->getHtml());
-    $assert_session->hiddenFieldValueEquals('last_review', date('Y-m-d'));
-    $assert_session->hiddenFieldValueEquals('next_review', $date);
+    $assert_session->hiddenFieldValueEquals('localgov_review_date[0][last_review]', date('Y-m-d'));
+    $assert_session->hiddenFieldValueEquals('localgov_review_date[0][next_review]', $date);
 
     $this->drupalLogout();
   }

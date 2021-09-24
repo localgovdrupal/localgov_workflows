@@ -15,7 +15,7 @@ label: 'Needs review'
 module: views
 description: 'Content that has past its review date.'
 tag: ''
-base_table: review_status
+base_table: review_date
 base_field: id
 display:
   default:
@@ -411,7 +411,7 @@ display:
           plugin_id: field
         created:
           id: created
-          table: review_status
+          table: review_date
           field: created
           relationship: none
           group_type: group
@@ -473,12 +473,12 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: review_status
+          entity_type: review_date
           entity_field: created
           plugin_id: field
         review:
           id: review
-          table: review_status
+          table: review_date
           field: review
           relationship: none
           group_type: group
@@ -540,7 +540,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: review_status
+          entity_type: review_date
           entity_field: review
           plugin_id: field
         operations:
@@ -597,7 +597,7 @@ display:
       filters:
         active:
           id: active
-          table: review_status
+          table: review_date
           field: active
           relationship: none
           group_type: group
@@ -632,7 +632,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: review_status
+          entity_type: review_date
           entity_field: active
           plugin_id: boolean
         title:
@@ -733,7 +733,7 @@ display:
           plugin_id: bundle
         review:
           id: review
-          table: review_status
+          table: review_date
           field: review
           relationship: none
           group_type: group
@@ -782,7 +782,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: review_status
+          entity_type: review_date
           entity_field: review
           plugin_id: date
       sorts: {  }
@@ -803,13 +803,13 @@ display:
       relationships:
         entity:
           id: entity
-          table: review_status
+          table: review_date
           field: entity
           relationship: none
           group_type: group
           admin_label: Content
           required: true
-          entity_type: review_status
+          entity_type: review_date
           entity_field: entity
           plugin_id: standard
       arguments: {  }

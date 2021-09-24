@@ -31,7 +31,7 @@ function localgov_review_date_entity_bundle_field_info(EntityTypeInterface $enti
         $fields['localgov_review_date'] = BaseFieldDefinition::create('review_date')
           ->setLabel(t('Review date'))
           ->setDisplayOptions('form', [
-            'type' => 'review_status',
+            'type' => 'review_date',
             'weight' => -5,
           ])
           ->setDisplayConfigurable('form', TRUE)

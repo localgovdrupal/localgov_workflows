@@ -15,7 +15,7 @@ use Drupal\workflows\Entity\Workflow;
  * @FieldType(
  *   id = "review_date",
  *   label = @Translation("Review Status"),
- *   description = @Translation("An entity field containing a review status."),
+ *   description = @Translation("An entity field containing a review date."),
  *   no_ui = TRUE,
  *   default_widget = "review_date",
  * )
@@ -31,6 +31,8 @@ class ReviewDateItem extends FieldItemBase {
       ->setLabel(t('Reviewed'));
     $properties['review'] = DataDefinition::create('any')
       ->setLabel(t('Next review date'));
+    $properties['review_langcode'] = DataDefinition::create('language')
+      ->setLabel(t('Language code'));
 
     return $properties;
   }
@@ -46,7 +48,7 @@ class ReviewDateItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    return ($this->reviewed === NULL || $this->reviewed === '') && ($this->review === NULL || $this->review === '');
+    return ($this->reviewed === NULL || $this->reviewed === '') && ($this->review === NULL || $this->review === '') && ($this->review_langcode === NULL || $this->review_langcode === '');
   }
 
   /**
@@ -65,7 +67,7 @@ class ReviewDateItem extends FieldItemBase {
       // Content has been flagged as reviewed so ensure the review status and
       // scheduled transition entities exist.
       $entity = $this->getEntity();
-      $active_review_date = ReviewDate::getActiveReviewDate($entity);
+      $active_review_date = ReviewDate::getActiveReviewDate($entity, $this->langcode);
 
       if ($active_review_date) {
 
@@ -82,7 +84,7 @@ class ReviewDateItem extends FieldItemBase {
         }
 
         // Create a new review status.
-        $review_date = ReviewDate::newReviewDate($entity, $scheduled_transition);
+        $review_date = ReviewDate::newReviewDate($entity, $this->langcode, $scheduled_transition);
         $review_date->save();
 
       }
@@ -91,7 +93,7 @@ class ReviewDateItem extends FieldItemBase {
         // No current review status so create a new one with associated
         // scheduled transition.
         $scheduled_transition = $this->createScheduledTransition();
-        $review_date = ReviewDate::newReviewDate($entity, $scheduled_transition);
+        $review_date = ReviewDate::newReviewDate($entity, $this->langcode, $scheduled_transition);
         $review_date->save();
       }
     }

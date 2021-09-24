@@ -20,28 +20,43 @@ class ReviewDateEntityTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
+    'content_moderation',
+    'dynamic_entity_reference',
+    'field',
+    'filter',
     'node',
+    'scheduled_transitions',
+    'system',
+    'text',
     'user',
-    'content_translation',
+    'views',
+    'workflows',
+    'localgov_workflows',
+    'localgov_review_date'.
   ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
+    parent::setup();
 
+    $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->installEntitySchema('path_alias');
-
+    $this->installEntitySchema('scheduled_transition');
+    $this->installEntitySchema('workflow');
+    $this->installEntitySchema('review_date');
     $this->installSchema('node', ['node_access']);
-
-    $node_type = NodeType::create(['type' => 'foo']);
-    $node_type->save();
-
-    $this->installConfig(['language']);
-    ConfigurableLanguage::createFromLangcode('de')->save();
+    $this->installConfig([
+      'content_moderation',
+      'filter',
+      'node',
+      'scheduled_transitions',
+      'system',
+      'views',
+      'localgov_workflows',
+    ]);
   }
 
   /**

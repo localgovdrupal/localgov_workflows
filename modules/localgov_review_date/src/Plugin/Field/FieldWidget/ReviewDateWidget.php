@@ -3,6 +3,7 @@
 namespace Drupal\localgov_review_date\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -62,7 +63,8 @@ class ReviewDateWidget extends WidgetBase implements ContainerFactoryPluginInter
 
     // Get current review status object.
     $entity = $items->getEntity();
-    $review_date = ReviewDate::getActiveReviewDate($entity);
+    $langcode = $form_state->get('langcode');
+    $review_date = ReviewDate::getActiveReviewDate($entity, $langcode);
 
     // Calculate next review date.
     $config = $this->configFactory->get('localgov_review_date.settings');
@@ -110,19 +112,23 @@ class ReviewDateWidget extends WidgetBase implements ContainerFactoryPluginInter
         'class' => ['review-date-review-date'],
       ],
     ];
-    $form['last_review'] = [
+    $element['last_review'] = [
       '#type' => 'hidden',
       '#value' => is_null($review_date) ? '' : date('Y-m-d', $review_date->getCreatedTime()),
       '#attributes' => [
         'class' => ['review-date-last-review'],
       ],
     ];
-    $form['next_review'] = [
+    $element['next_review'] = [
       '#type' => 'hidden',
       '#value' => is_null($review_date) ? '' : date('Y-m-d', $review_date->getReviewTime()),
       '#attributes' => [
         'class' => ['review-date-next-review'],
       ],
+    ];
+    $element['langcode'] = [
+      '#type' => 'hidden',
+      '#value' => $langcode,
     ];
 
     // Add to advanced settings.

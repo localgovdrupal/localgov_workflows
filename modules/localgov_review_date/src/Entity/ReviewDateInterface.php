@@ -19,28 +19,32 @@ interface ReviewDateInterface extends ContentEntityInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   Entity that has been reviewed.
+   * @param string $langcode
+   *   Language code for entity being reviewed.
    * @param \Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface $transition
    *   ScheduledTransition entity for when the content needs reviewing.
    * @param \Drupal\Core\Session\AccountInterface|null $author
    *   Account of user reviewing the content. Defaults to current user.
-   * @param bool $current
-   *   Is this the current revision. Defaults to TRUE.
+   * @param bool $active
+   *   Is this the active version. Defaults to TRUE.
    *
    * @return ReviewDate
    *   The newly created ReviewDate instance.
    */
-  public static function newReviewDate(EntityInterface $entity, ScheduledTransitionInterface $transition, ?AccountInterface $author = NULL, $current = TRUE): ReviewDate;
+  public static function newReviewDate(EntityInterface $entity, string $langcode, ScheduledTransitionInterface $transition, ?AccountInterface $author = NULL, bool $active = TRUE): ReviewDate;
 
   /**
    * Gets the active ReviewDate for the given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity that has been reviewed.
+   * @param string $langcode
+   *   The language code for the entity that has been reviewed.
    *
    * @return \Drupal\localgov_review_date\Entity\ReviewDate|null
    *   The status.
    */
-  public static function getActiveReviewDate(EntityInterface $entity): ?ReviewDate;
+  public static function getActiveReviewDate(EntityInterface $entity, string $langcode): ?ReviewDate;
 
   /**
    * Is this the current active review date.
@@ -73,6 +77,14 @@ interface ReviewDateInterface extends ContentEntityInterface {
    *   The content entity that has been reviewed.
    */
   public function getEntity(): EntityInterface;
+
+  /**
+   * Gets the langcode for the entity review date.
+   *
+   * @return string
+   *   The language code for the entity that has been reviewed.
+   */
+  public function getLanguage(): string;
 
   /**
    * Gets the timestamp when the content is next due to be reviewed.
