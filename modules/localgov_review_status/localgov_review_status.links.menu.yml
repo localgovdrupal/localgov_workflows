@@ -1,5 +1,0 @@
-localgov_review_status.settings_form:
-  title: 'LocalGov Review Status'
-  route_name: localgov_review_status.settings_form
-  description: 'Configure LocalgGov review dates.'
-  parent: system.admin_config_workflow

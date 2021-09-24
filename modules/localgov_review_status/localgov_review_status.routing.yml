@@ -1,7 +1,0 @@
-localgov_review_status.settings_form:
-  path: '/admin/config/workflow/localgov-review-status'
-  defaults:
-    _form: '\Drupal\localgov_review_status\Form\ReviewStatusSettingsForm'
-    _title: 'LocalGov Review Status settings'
-  requirements:
-    _permission: 'administer localgov_review_status'
