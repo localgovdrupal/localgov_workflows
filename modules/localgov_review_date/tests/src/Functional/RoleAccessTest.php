@@ -6,7 +6,6 @@ use Drupal\localgov_roles\RolesHelper;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\workflows\Entity\Workflow;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -3,7 +3,6 @@
 namespace Drupal\localgov_review_date\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;

@@ -56,7 +56,7 @@ class NodeTranslationTest extends BrowserTestBase {
       [
         'entity_type' => 'node',
         'bundle' => 'page',
-      ]
+      ],
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();

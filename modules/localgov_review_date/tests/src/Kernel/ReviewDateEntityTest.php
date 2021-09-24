@@ -87,7 +87,7 @@ class ReviewDateEntityTest extends KernelTestBase {
       [
         'entity_type' => 'node',
         'bundle' => 'page',
-      ]
+      ],
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();

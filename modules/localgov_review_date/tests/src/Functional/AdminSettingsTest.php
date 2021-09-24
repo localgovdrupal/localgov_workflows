@@ -50,7 +50,7 @@ class AdminSettingsTest extends BrowserTestBase {
       [
         'entity_type' => 'node',
         'bundle' => 'page',
-      ]
+      ],
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();
@@ -58,7 +58,7 @@ class AdminSettingsTest extends BrowserTestBase {
     // Create test user and log in.
     $web_user = $this->drupalCreateUser([
       'create page content',
-      'administer localgov_review_date'
+      'administer localgov_review_date',
     ]);
     $this->drupalLogin($web_user);
   }
@@ -72,7 +72,7 @@ class AdminSettingsTest extends BrowserTestBase {
     // Check the default next review date is 12 months.
     $this->drupalGet('node/add/page');
     $this->assertTrue($this->assertSession()->optionExists('localgov_review_date[0][review][review_in]', 12)->isSelected());
-    $next_review_date =  date('Y-m-d', strtotime('+12 months'));
+    $next_review_date = date('Y-m-d', strtotime('+12 months'));
     $assert_session->fieldValueEquals('localgov_review_date[0][review][review_date]', $next_review_date);
 
     // Check default review date options.
@@ -93,8 +93,8 @@ class AdminSettingsTest extends BrowserTestBase {
 
     // Check new default review date.
     $this->drupalGet('node/add/page');
-    $this->assertTrue($this->assertSession()->optionExists('localgov_review_date[0][review][review_in]', $default_next_review )->isSelected());
-    $next_review_date =  date('Y-m-d', strtotime('+' . $default_next_review . ' months'));
+    $this->assertTrue($this->assertSession()->optionExists('localgov_review_date[0][review][review_in]', $default_next_review)->isSelected());
+    $next_review_date = date('Y-m-d', strtotime('+' . $default_next_review . ' months'));
     $assert_session->fieldValueEquals('localgov_review_date[0][review][review_date]', $next_review_date);
   }
 

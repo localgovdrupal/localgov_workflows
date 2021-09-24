@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_entity_bundle_field_info().
@@ -48,14 +49,14 @@ function localgov_review_date_entity_bundle_field_info(EntityTypeInterface $enti
  *
  * Add submit handler to the scheduled transitions settings form.
  */
-function localgov_review_date_form_scheduled_transitions_settings_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function localgov_review_date_form_scheduled_transitions_settings_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['#submit'][] = 'localgov_review_date_form_scheduled_transitions_settings_submit';
 }
 
 /**
  * Clear caches after submitting the scheduled transitions settings form.
  */
-function localgov_review_date_form_scheduled_transitions_settings_submit(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
+function localgov_review_date_form_scheduled_transitions_settings_submit(array $form, FormStateInterface $form_state) {
 
   // The review date field is only added to nodes that have scheduled
   // transitions enabled. It's necessary to rebuild caches after making changes
