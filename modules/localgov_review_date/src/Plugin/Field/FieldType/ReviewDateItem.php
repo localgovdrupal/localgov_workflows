@@ -74,7 +74,7 @@ class ReviewDateItem extends FieldItemBase {
         // If there's scheduled transition just update the date, otherwise
         // create a new one.
         $scheduled_transition = $active_review_date->getScheduledTransition();
-        if ($scheduled_transition) {
+        if (!is_null($scheduled_transition)) {
           $next_review = strtotime($this->review['review_date']);
           $scheduled_transition->setTransitionTime($next_review);
           $scheduled_transition->save();
