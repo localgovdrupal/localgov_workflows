@@ -11,17 +11,5 @@
         "drupal/preview_link": "^1.7",
         "drupal/responsive_preview": "^1.0",
         "drupal/scheduled_transitions": "^2.1"
-    },
-    "extra": {
-        "enable-patching": true,
-        "composer-exit-on-patch-failure": true,
-        "patchLevel": {
-            "drupal/core": "-p2"
-        },
-        "patches": {
-            "drupal/core": {
-                "Fix: Undefined index: type in Drupal\\Core\\Render\\Element\\Date::processDate() #3189302": "https://www.drupal.org/files/issues/2021-04-07/3189302_11.patch"
-            }
-        }
     }
 }
