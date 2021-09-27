@@ -154,4 +154,5 @@ class NodeFormTest extends BrowserTestBase {
     $this->assertEquals(2, $scheduled_transition->id());
     $this->assertEquals($review_date->getReviewTime(), $scheduled_transition->getTransitionTime());
   }
+
 }
