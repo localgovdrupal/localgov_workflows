@@ -122,7 +122,7 @@ class NodeFormTest extends BrowserTestBase {
       'localgov_review_date[0][review][review_date]' => $next_review,
     ];
     $this->submitForm($edit, 'Save');
-    drupal_flush_all_caches();
+    $this->container->get('entity_type.manager')->getStorage('scheduled_transition')->resetCache([1]);
     $review_date = ReviewDate::getActiveReviewDate($node, $langcode);
     $this->assertEquals(2, $review_date->id());
     $this->assertEquals(strtotime($next_review), $review_date->getReviewTime());
@@ -131,7 +131,8 @@ class NodeFormTest extends BrowserTestBase {
     $this->assertEquals($review_date->getReviewTime(), $scheduled_transition->getTransitionTime());
 
     // Delete scheduled transition.
-    $scheduled_transition->delete();
+    $this->drupalGet('admin/scheduled-transition/1/delete');
+    $this->submitForm([], 'Delete');
     drupal_flush_all_caches();
     $scheduled_transition = ScheduledTransition::load(1);
     $this->assertNull($scheduled_transition);
@@ -146,7 +147,6 @@ class NodeFormTest extends BrowserTestBase {
       'localgov_review_date[0][review][review_date]' => $next_review,
     ];
     $this->submitForm($edit, 'Save');
-    drupal_flush_all_caches();
     $review_date = ReviewDate::getActiveReviewDate($node, $langcode);
     $this->assertEquals(3, $review_date->id());
     $this->assertEquals(strtotime($next_review), $review_date->getReviewTime());
