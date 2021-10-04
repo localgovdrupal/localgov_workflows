@@ -195,7 +195,7 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
 
     // There should only be one active review status for each translated entity.
     if ($this->isActive()) {
-      $storage = \Drupal::entityTypeManager()->getStorage('review_date');
+      $storage = $this->entityTypeManager()->getStorage('review_date');
       $active = $storage->loadByProperties([
         'entity' => $this->getEntity()->id(),
         'langcode' => $this->getLanguage(),

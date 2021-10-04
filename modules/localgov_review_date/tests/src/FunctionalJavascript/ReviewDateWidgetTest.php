@@ -77,7 +77,7 @@ class ReviewDateWidgetTest extends WebDriverTestBase {
 
     // Check next review date selector.
     foreach (ReviewDateSettingsForm::getNextReviewOptions() as $month => $description) {
-      $review_in = date('Y-m-d', strtotime('+' . $month . ' months'));
+      $review_in = date('Y-m-d', 1633352422);
       $page->selectFieldOption('localgov_review_date[0][review][review_in]', $month);
       $review_date = $page->findField('localgov_review_date[0][review][review_date]');
       $this->assertEquals($review_in, $review_date->getValue());
