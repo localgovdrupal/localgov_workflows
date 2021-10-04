@@ -7,7 +7,9 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\localgov_roles\RolesHelper;
+use Drupal\localgov_workflows\RequireLogMessage;
 use Drupal\node\NodeTypeInterface;
 use Drupal\workflows\Entity\Workflow;
 
@@ -129,4 +131,26 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
 
   // Add cache dependency on workflow.
   $cacheability->addCacheTags(['config:workflow_list']);
+}
+
+/**
+ * Imlements hook_form_BASE_FORM_ID_alter().
+ */
+function localgov_workflows_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+  return \Drupal::classResolver(RequireLogMessage::class)
+    ->alterNodeTypeForm($form, $form_state);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function localgov_workflows_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter' && isset($implementations['localgov_workflows'])) {
+    // field_ui was altering the node_type form before us, copying and hiding
+    // the submit button, and thus handlers. As some other module could do
+    // the same we'll just get in early.
+    $group = $implementations['localgov_workflows'];
+    unset($implementations['localgov_workflows']);
+    $implementations = ['localgov_workflows' => $group] + $implementations;
+  }
 }
