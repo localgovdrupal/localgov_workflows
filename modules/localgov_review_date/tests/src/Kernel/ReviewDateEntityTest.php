@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\localgov_review_date\Kernel;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\scheduled_transitions\Entity\ScheduledTransition;
+use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\localgov_review_date\Entity\ReviewDate;
@@ -91,6 +93,10 @@ class ReviewDateEntityTest extends KernelTestBase {
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();
+    Cache::invalidateTags([
+      ScheduledTransitionsSettingsForm::SETTINGS_TAG,
+      'config:scheduled_transitions.settings',
+    ]);
 
     // Create a node.
     $this->node = $this->createNode([

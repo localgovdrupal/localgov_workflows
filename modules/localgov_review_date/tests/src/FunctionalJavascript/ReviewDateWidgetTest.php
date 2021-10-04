@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\localgov_review_date\FunctionalJavascript;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\localgov_review_date\Form\ReviewDateSettingsForm;
+use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
 /**
@@ -55,6 +57,10 @@ class ReviewDateWidgetTest extends WebDriverTestBase {
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();
+    Cache::invalidateTags([
+      ScheduledTransitionsSettingsForm::SETTINGS_TAG,
+      'config:scheduled_transitions.settings',
+    ]);
 
     $this->drupalLogin($this->rootUser);
   }

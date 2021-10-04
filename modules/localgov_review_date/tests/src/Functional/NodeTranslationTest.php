@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\localgov_review_date\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\localgov_review_date\Entity\ReviewDate;
+use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
 
@@ -60,6 +62,10 @@ class NodeTranslationTest extends BrowserTestBase {
     ];
     $scheduled_transitions_config->set('bundles', $bundles);
     $scheduled_transitions_config->save();
+    Cache::invalidateTags([
+      ScheduledTransitionsSettingsForm::SETTINGS_TAG,
+      'config:scheduled_transitions.settings',
+    ]);
 
     // Enable Welsh for page.
     $this->drupalGet('admin/config/regional/language/add');

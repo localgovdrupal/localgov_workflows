@@ -109,6 +109,7 @@ class ReviewDateWidget extends WidgetBase implements ContainerFactoryPluginInter
       '#default_value' => $next_review,
       '#attributes' => [
         'class' => ['review-date-review-date'],
+        'type' => 'date',
       ],
     ];
     $element['last_review'] = [
