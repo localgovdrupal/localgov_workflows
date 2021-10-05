@@ -70,6 +70,10 @@ class ReviewDateWidgetTest extends WebDriverTestBase {
    */
   public function testReviewDateWidget() {
 
+    // Set timezone to UTC.
+    $this->drupalGet('admin/config/regional/settings');
+    $this->submitForm(['date_default_timezone' => 'UTC'], 'Save configuration');
+
     // Check initial settings.
     $this->drupalGet('node/add/page');
     $page = $this->getSession()->getPage();
@@ -83,7 +87,7 @@ class ReviewDateWidgetTest extends WebDriverTestBase {
 
     // Check next review date selector.
     foreach (ReviewDateSettingsForm::getNextReviewOptions() as $month => $description) {
-      $review_in = date('Y-m-d', 1633352422);
+      $review_in = date('Y-m-d', strtotime('+' . $month . ' month'));
       $page->selectFieldOption('localgov_review_date[0][review][review_in]', $month);
       $review_date = $page->findField('localgov_review_date[0][review][review_date]');
       $this->assertEquals($review_in, $review_date->getValue());
