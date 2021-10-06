@@ -4,7 +4,6 @@ namespace Drupal\Tests\localgov_review_date\FunctionalJavascript;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Drupal\localgov_review_date\Form\ReviewDateSettingsForm;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
