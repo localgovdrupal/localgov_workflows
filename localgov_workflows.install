@@ -18,7 +18,7 @@ use Drupal\workflows\Entity\Workflow;
  */
 function localgov_workflows_install($is_syncing) {
 
-  // Add workflow to localgov_ node bundles with no other workflow.
+  // Configure workflow for localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
   if (!$editorial) {
     $config_key = 'workflows.workflow.localgov_editorial';
@@ -43,6 +43,8 @@ function localgov_workflows_install($is_syncing) {
   $changed = FALSE;
   foreach ($node_types as $type_name => $node_type) {
     if (strpos($type_name, 'localgov_') === 0 && empty($node_type['workflow'])) {
+
+      // Add workflow.
       $workflow_type->addEntityTypeAndBundle('node', $type_name);
       $changed = TRUE;
     }
