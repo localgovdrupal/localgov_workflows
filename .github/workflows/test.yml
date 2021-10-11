@@ -38,11 +38,11 @@ jobs:
           echo "GIT_BRANCH=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
           echo "GIT_REPO=${{ github.event.pull_request.head.repo.full_name }}" >> $GITHUB_ENV
 
-      - name: Set composer branch reference for main version branches
+      - name: Set composer branch reference for version branches
         if: endsWith(github.ref, '.x')
         run: echo "COMPOSER_REF=${GIT_BRANCH}-dev" >> $GITHUB_ENV
 
-      - name: Set composer branch reference for main version branches
+      - name: Set composer branch reference for non-version branches
         if: endsWith(github.ref, '.x') == false
         run: echo "COMPOSER_REF=dev-${GIT_BRANCH}" >> $GITHUB_ENV
 
@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -78,7 +78,7 @@ jobs:
 
       - name: Obtain the test target from the repo that triggered this workflow
         run: |
-          composer --working-dir=./html config repositories.1 vcs git@github.com:${GIT_REPO}.git
+          composer --working-dir=html config repositories.1 vcs git@github.com:${GIT_REPO}.git
           composer global config github-oauth.github.com ${{ github.token }}
           composer --working-dir=./html require --with-all-dependencies localgovdrupal/${{ github.event.repository.name }}:"${COMPOSER_REF} as ${LATEST_RELEASE}"
 
@@ -101,7 +101,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
 
@@ -134,7 +134,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
 
@@ -163,17 +163,17 @@ jobs:
 
     steps:
 
-      - name: Clone drupal_container
+      - name: Clone Drupal container
         uses: actions/checkout@v2
         with:
           repository: localgovdrupal/drupal-container
-          ref: master
+          ref: php${{ matrix.php-version }}
 
       - name: Cached workspace
         uses: actions/cache@v2
         with:
           path: ./html
-          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}
+          key: localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-${{ github.run_id }}-${{ secrets.CACHE_VERSION }}
           restore-keys: |
             localgov-build-${{ matrix.localgov-version }}-${{ matrix.drupal-version }}-${{ matrix.php-version }}-
 
@@ -183,7 +183,5 @@ jobs:
       - name: Run PHPUnit tests
         run: |
           mkdir -p ./html/web/sites/simpletest && chmod 777 ./html/web/sites/simpletest
-          sed -i "s#http://localgov.lndo.site#http://drupal#; s#mysql://database:database@database/database#sqlite://localhost//dev/shm/test.sqlite#" ./html/phpunit.xml.dist
           docker exec -t drupal bash -c 'chown docker:docker -R /var/www/html'
-          # docker exec -u docker -t drupal bash -c "cd /var/www/html && ./bin/phpunit --testdox"
           docker exec -u docker -t drupal bash -c "cd /var/www/html && ./bin/paratest --processes=4"
