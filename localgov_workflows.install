@@ -29,7 +29,8 @@ function localgov_workflows_install($is_syncing) {
     }
     if (!$is_syncing || !$editorial_config) {
       // If workflow doesn't already exist load it from this module.
-      $config_source = new FileStorage(drupal_get_path('module', 'localgov_workflows') . '/config/install');
+      $config_file_path = \Drupal::service('extension.path.resolver')->getPath('module', 'localgov_workflows') . '/config/install';
+      $config_source = new FileStorage($config_file_path);
       $editorial_config = $config_source->read($config_key);
     }
     \Drupal::entityTypeManager()->getStorage('workflow')
@@ -100,7 +101,8 @@ function localgov_workflows_update_9001() {
   // not present.
   if (!Role::load(RolesHelper::CONTRIBUTOR_ROLE)) {
     $config_key = 'user.role.' . RolesHelper::CONTRIBUTOR_ROLE;
-    $source = new FileStorage(drupal_get_path('module', 'localgov_roles') . '/config/install');
+    $config_file_path = \Drupal::service('extension.path.resolver')->getPath('module', 'localgov_roles') . '/config/install';
+    $source = new FileStorage($config_file_path);
     $contributor_config = $source->read($config_key);
     \Drupal::entityTypeManager()->getStorage('user_role')
       ->create($contributor_config)
