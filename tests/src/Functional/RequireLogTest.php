@@ -32,8 +32,18 @@ class RequireLogTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Create an article content type that we will use for testing.
+    $type = $this->container->get('entity_type.manager')->getStorage('node_type')
+      ->create([
+        'type' => 'require_log_test',
+        'name' => 'Require log test',
+      ]);
+    $type->save();
+    $this->container->get('router.builder')->rebuild();
+
     $this->adminUser = $this->drupalCreateUser([
       'administer content types',
+      'create require_log_test content',
     ]);
 
     $this->drupalLogin($this->adminUser);
@@ -45,12 +55,10 @@ class RequireLogTest extends BrowserTestBase {
   public function testRequireLogContentType() {
     // Default is for content type to have revisions.
     // Require log message too.
-    $this->drupalGet('/admin/structure/types/add');
+    $this->drupalGet('/admin/structure/types/manage/require_log_test');
     $this->assertSession()->responseContains('Require revision log message');
     // Enabling field_ui will change that button.
     $this->submitForm([
-      'name' => 'require log test',
-      'type' => 'require_log_test',
       'options[revision_required]' => TRUE,
     ], 'Save content type');
 
