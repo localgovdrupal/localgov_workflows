@@ -115,7 +115,7 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
   if (in_array($route_name, $admin_content_routes)) {
 
     // Check if there are more workflows enabled than localgov_editorial.
-    $workflows = \Drupal::entityQuery('workflow')->execute();
+    $workflows = \Drupal::entityQuery('workflow')->accessCheck(TRUE)->execute();
     if (in_array('localgov_editorial', $workflows) && count($workflows) == 1) {
 
       // Hide the moderated content tab.
