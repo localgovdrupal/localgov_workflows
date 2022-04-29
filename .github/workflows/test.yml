@@ -3,10 +3,10 @@ name: Test localgovdrupal/localgov_workflows drupal-module
 on:
   push:
     branches:
-      - 1.x
+      - '1.x'
   pull_request:
     branches:
-      - 1.x
+      - '1.x'
 
 env:
   LOCALGOV_DRUPAL_PROJECT: localgovdrupal/localgov_workflows
@@ -22,12 +22,12 @@ jobs:
       fail-fast: false
       matrix:
         localgov-version:
-          - 2.x
+          - '2.x'
         drupal-version:
-          - 9.3
+          - '~9.3'
         php-version:
-          - 7.4
-          - 8.1
+          - '7.4'
+          - '8.1'
 
     steps:
 
@@ -96,12 +96,12 @@ jobs:
       fail-fast: false
       matrix:
         localgov-version:
-          - 2.x
+          - '2.x'
         drupal-version:
-          - 9.3
+          - '~9.3'
         php-version:
-          - 7.4
-          - 8.1
+          - '7.4'
+          - '8.1'
 
     steps:
 
@@ -132,12 +132,12 @@ jobs:
       fail-fast: false
       matrix:
         localgov-version:
-          - 2.x
+          - '2.x'
         drupal-version:
-          - 9.3
+          - '~9.3'
         php-version:
-          - 7.4
-          - 8.1
+          - '7.4'
+          - '8.1'
 
     steps:
 
@@ -168,12 +168,12 @@ jobs:
       fail-fast: false
       matrix:
         localgov-version:
-          - 2.x
+          - '2.x'
         drupal-version:
-          - 9.3
+          - '~9.3'
         php-version:
-          - 7.4
-          - 8.1
+          - '7.4'
+          - '8.1'
 
     steps:
 
@@ -200,5 +200,4 @@ jobs:
           sed -i "s#http://localgov.lndo.site#http://drupal#" ./html/phpunit.xml.dist
           docker exec -t drupal bash -c 'chown docker:docker -R /var/www/html'
           docker exec -u docker -t drupal bash -c "cd /var/www/html && ./bin/paratest --processes=4 web/modules/contrib/localgov_workflows"
-      
-      
+
