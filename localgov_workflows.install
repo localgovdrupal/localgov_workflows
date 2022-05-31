@@ -57,7 +57,7 @@ function localgov_workflows_install($is_syncing) {
 
   // Enable scheduled transitions for all node bundles.
   $scheduled_transitions_config = \Drupal::service('config.factory')->getEditable('scheduled_transitions.settings');
-  $bundles = $scheduled_transitions_config->get('bundles', []);
+  $bundles = $scheduled_transitions_config->get('bundles') ?? [];
   foreach ($node_types as $bundle => $node_type) {
     if (empty($bundles) || !in_array($bundle, array_column($bundles, 'bundle'))) {
       $bundles[] = [
