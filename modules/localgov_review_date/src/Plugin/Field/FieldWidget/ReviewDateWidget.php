@@ -62,7 +62,7 @@ class ReviewDateWidget extends WidgetBase implements ContainerFactoryPluginInter
 
     // Get current review status object.
     $entity = $items->getEntity();
-    $langcode = $form_state->get('langcode');
+    $langcode = $form_state->get('langcode') ?? 'und';
     $review_date = ReviewDate::getActiveReviewDate($entity, $langcode);
 
     // Calculate next review date.
