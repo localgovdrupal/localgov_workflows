@@ -7,7 +7,6 @@
     "minimum-stability": "dev",
     "require": {
         "drupal/diff": "^1.0",
-        "drupal/preview_link": "^2.1@alpha",
         "drupal/responsive_preview": "^2.0",
         "drupal/scheduled_transitions": "^2.1",
         "localgovdrupal/localgov_core": "^2.12"
