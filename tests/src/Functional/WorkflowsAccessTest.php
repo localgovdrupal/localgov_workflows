@@ -170,7 +170,7 @@ class WorkflowsAccessTest extends BrowserTestBase {
       'title[0][value]' => $title,
       'moderation_state[0][state]' => $state,
       'body[0][summary]' => 'Summary',
-      'body[0][value]' => 'Body'
+      'body[0][value]' => 'Body',
     ], 'Save');
     $node = $this->getNodeByTitle($title);
     $this->assertEquals($state, $node->moderation_state->value);

@@ -97,10 +97,10 @@ class ApprovalsDashboardTest extends BrowserTestBase {
     $this->assertSession()->elementContains('css', '.views-table', 'Edit');
 
     // Check review content not editable by authors.
-     $this->drupalLogin($author);
-     $this->drupalGet('admin/content/localgov_approvals');
-     $this->assertSession()->pageTextContains($title);
-     $this->assertSession()->elementNotContains('css', '.views-table', 'Edit');
+    $this->drupalLogin($author);
+    $this->drupalGet('admin/content/localgov_approvals');
+    $this->assertSession()->pageTextContains($title);
+    $this->assertSession()->elementNotContains('css', '.views-table', 'Edit');
 
     // Check published content not included.
     $node->set('moderation_state', 'published');
