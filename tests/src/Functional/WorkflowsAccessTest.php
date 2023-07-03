@@ -91,6 +91,10 @@ class WorkflowsAccessTest extends BrowserTestBase {
     $other_node = $this->drupalCreateNode([
       'type' => 'localgov_services_page',
       'title' => $this->randomMachineName(12),
+      'body' => [
+        'summary' => 'Summary',
+        'value' => 'Body',
+      ],
       'uid' => 1,
       'moderation_state' => 'draft',
     ]);
@@ -127,6 +131,10 @@ class WorkflowsAccessTest extends BrowserTestBase {
     $node3 = $this->drupalCreateNode([
       'type' => 'localgov_services_page',
       'title' => $this->randomMachineName(12),
+      'body' => [
+        'summary' => 'Summary',
+        'value' => 'Body',
+      ],
       'uid' => 1,
       'moderation_state' => 'review',
     ]);
@@ -136,6 +144,10 @@ class WorkflowsAccessTest extends BrowserTestBase {
     $node4 = $this->drupalCreateNode([
       'type' => 'localgov_services_page',
       'title' => $this->randomMachineName(12),
+      'body' => [
+        'summary' => 'Summary',
+        'value' => 'Body',
+      ],
       'uid' => 1,
       'moderation_state' => 'review',
     ]);
