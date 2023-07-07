@@ -85,6 +85,19 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
   /**
    * {@inheritdoc}
    */
+  public function label() {
+
+    // If this review references an entity, use that as the label.
+    $entity = $this->getEntity();
+    if ($entity instanceof EntityInterface) {
+      return $entity->label();
+    }
+    return parent::label();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isActive(): bool {
     return $this->get('active')->value;
   }
