@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface;
 
 /**
@@ -32,6 +33,8 @@ use Drupal\scheduled_transitions\Entity\ScheduledTransitionInterface;
  * )
  */
 class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Workflow state that transition content to on the next review date.
@@ -89,7 +92,9 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
 
     // If this review references an entity, use that as the label.
     if ($this->hasEntity()) {
-      return $this->getEntity()->label();
+      return $this->t('Review of @label', [
+        '@label' => $this->getEntity()->label(),
+      ]);
     }
     return parent::label();
   }

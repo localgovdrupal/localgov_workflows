@@ -126,7 +126,7 @@ class ReviewDateEntityTest extends KernelTestBase {
     $review_date = ReviewDate::newReviewDate($this->node, 'en', $scheduled_transition);
     $this->assertTrue($review_date->isActive());
     $this->assertEquals($this->node->id(), $review_date->getEntity()->id());
-    $this->assertEquals($this->node->label(), $review_date->label());
+    $this->assertEquals('Review of ' . $this->node->label(), $review_date->label());
     $this->assertEquals('en', $review_date->getLanguage());
     $this->assertEquals($reviewed, $review_date->getReviewTime());
     $this->assertEquals($scheduled_transition->id(), $review_date->getScheduledTransition()->id());
