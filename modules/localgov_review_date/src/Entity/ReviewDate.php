@@ -88,9 +88,8 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
   public function label() {
 
     // If this review references an entity, use that as the label.
-    $entity = $this->getEntity();
-    if ($entity instanceof EntityInterface) {
-      return $entity->label();
+    if ($this->hasEntity()) {
+      return $this->getEntity()->label();
     }
     return parent::label();
   }
@@ -138,6 +137,13 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
   protected function setCreatedTime($created) {
     $this->set('created', $created);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasEntity(): bool {
+    return ($this->get('entity')->entity instanceof EntityInterface);
   }
 
   /**
