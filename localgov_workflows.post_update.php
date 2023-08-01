@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Post update hooks functions for the LocalGov Workflow module.
+ * Post update hooks functions for the LocalGov Workflows module.
  */
 
 use Drupal\Core\Cache\Cache;
@@ -11,7 +11,7 @@ use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\workflows\Entity\Workflow;
 
 /**
- * Implements hook_install().
+ * Implements hook_post_update_NAME().
  */
 function localgov_workflows_post_update_workflow(&$sandbox) {
 
