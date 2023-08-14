@@ -784,7 +784,7 @@ display:
           entity_type: node
           plugin_id: moderation_state_filter
       sorts: {  }
-      title: 'Approvals dashboard'
+      title: 'Approve content'
       header: {  }
       footer: {  }
       empty:
@@ -842,7 +842,7 @@ display:
   approvals_dashboard:
     display_plugin: page
     id: approvals_dashboard
-    display_title: 'Approvals dashboard'
+    display_title: 'Approve content'
     position: 1
     display_options:
       display_extenders: {  }
@@ -850,7 +850,7 @@ display:
       display_description: 'LocalGov content waiting for approval'
       menu:
         type: normal
-        title: 'Approvals dashboard'
+        title: 'Approve content'
         description: ''
         expanded: false
         parent: system.admin_content
