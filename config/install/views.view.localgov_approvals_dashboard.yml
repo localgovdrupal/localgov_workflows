@@ -797,7 +797,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'No content waiting for approval. Only content in review is listed here.'
+          content: 'No content waiting for approval.'
           plugin_id: text_custom
       relationships:
         nid:

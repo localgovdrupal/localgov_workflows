@@ -798,7 +798,7 @@ display:
           admin_label: ''
           empty: true
           tokenize: false
-          content: 'No content waiting for review.'
+          content: 'No content has passed its review date.'
           plugin_id: text_custom
       relationships:
         entity:
