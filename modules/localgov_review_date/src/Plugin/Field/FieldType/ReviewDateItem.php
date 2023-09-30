@@ -24,7 +24,7 @@ class ReviewDateItem extends FieldItemBase {
 
   /**
    * The langcode.
-   * 
+   *
    * @var string
    */
   protected static $langcode;
