@@ -22,6 +22,8 @@ use Drupal\workflows\Entity\Workflow;
  */
 class ReviewDateItem extends FieldItemBase {
 
+  protected static $langcode;
+
   /**
    * {@inheritdoc}
    */
@@ -68,13 +70,12 @@ class ReviewDateItem extends FieldItemBase {
   public function postSave($update) {
     $reviewed = $this->get('reviewed')->getValue();
     $review = $this->get('review')->getValue();
-    $langcode = $this->getLangcode();
 
     if ($reviewed) {
       // Content has been flagged as reviewed so ensure the review status and
       // scheduled transition entities exist.
       $entity = $this->getEntity();
-      $active_review_date = ReviewDate::getActiveReviewDate($entity, $langcode);
+      $active_review_date = ReviewDate::getActiveReviewDate($entity, $this->langcode);
 
       if ($active_review_date) {
 
@@ -91,7 +92,7 @@ class ReviewDateItem extends FieldItemBase {
         }
 
         // Create a new review status.
-        $review_date = ReviewDate::newReviewDate($entity, $langcode, $scheduled_transition);
+        $review_date = ReviewDate::newReviewDate($entity, $this->langcode, $scheduled_transition);
         $review_date->save();
 
       }
@@ -100,13 +101,12 @@ class ReviewDateItem extends FieldItemBase {
         // No current review status so create a new one with associated
         // scheduled transition.
         $scheduled_transition = $this->createScheduledTransition();
-        $review_date = ReviewDate::newReviewDate($entity, $langcode, $scheduled_transition);
+        $review_date = ReviewDate::newReviewDate($entity, $this->langcode, $scheduled_transition);
         $review_date->save();
       }
-
-      return parent::postSave($update);
     }
 
+    // No changes made to the ReviewDate field item in this method.
     return FALSE;
   }
 
