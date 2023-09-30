@@ -22,6 +22,11 @@ use Drupal\workflows\Entity\Workflow;
  */
 class ReviewDateItem extends FieldItemBase {
 
+  /**
+   * The langcode.
+   * 
+   * @var string
+   */
   protected static $langcode;
 
   /**
