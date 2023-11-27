@@ -120,7 +120,7 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
   $admin_content_routes = [
     'system.admin_content',
     'view.localgov_approvals_dashboard.approvals_dashboard',
-    'content_moderation.admin_moderated_content'
+    'content_moderation.admin_moderated_content',
 
   ];
   if (in_array($route_name, $admin_content_routes)) {
