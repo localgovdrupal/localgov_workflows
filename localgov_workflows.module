@@ -30,6 +30,7 @@ function localgov_workflows_modules_installed($modules, $is_syncing) {
       ->getStorage('view')
       ->load('moderated_content');
     if ($moderated_content_view) {
+      //dpm($display);
       $display = $moderated_content_view->get('display');
       $filters = $display['default']['display_options']['filters'];
       $filters['moderation_state']['value'] = [
@@ -41,6 +42,8 @@ function localgov_workflows_modules_installed($modules, $is_syncing) {
         'localgov_editorial-published' => 'localgov_editorial-published',
       ];
       $display['default']['display_options']['filters'] = $filters;
+      $display['default']['display_options']['title'] = 'Unpublished';
+      $display['default']['display_options']['empty']['area_text_custom']['content'] = 'Content in Draft, Archive and Needs Review states appear here.';
       $moderated_content_view->set('display', $display);
       $moderated_content_view->save();
     }
@@ -118,9 +121,19 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
   $admin_content_routes = [
     'system.admin_content',
     'view.localgov_approvals_dashboard.approvals_dashboard',
+    'content_moderation.admin_moderated_content'
+
   ];
   if (in_array($route_name, $admin_content_routes)) {
-
+    for ($i = 0; $i < count($data['tabs']); $i++) {
+      // Rename the content moderation view and move to the end.
+      foreach ($data['tabs'][$i] as $key => $tab) {
+        if ($key == 'content_moderation.workflows:content_moderation.moderated_content') {
+          $data['tabs'][$i][$key]['#link']['title'] = 'Unpublished';
+          $data['tabs'][$i][$key]['#weight'] = 20;
+        }
+      }
+    }
     // Check if there are more workflows enabled than localgov_editorial.
     $workflows = \Drupal::entityQuery('workflow')->accessCheck(TRUE)->execute();
     if (in_array('localgov_editorial', $workflows) && count($workflows) == 1) {
