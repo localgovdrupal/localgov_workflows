@@ -30,7 +30,6 @@ function localgov_workflows_modules_installed($modules, $is_syncing) {
       ->getStorage('view')
       ->load('moderated_content');
     if ($moderated_content_view) {
-      //dpm($display);
       $display = $moderated_content_view->get('display');
       $filters = $display['default']['display_options']['filters'];
       $filters['moderation_state']['value'] = [
