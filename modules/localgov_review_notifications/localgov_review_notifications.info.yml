@@ -1,0 +1,7 @@
+name: 'LocalGov Review Notifications'
+type: module
+description: 'Send notifications to service contacts when content needs reviewing.'
+package: LocalGov Drupal
+core_version_requirement: ^10
+dependencies:
+  - localgov_workflows:localgov_workflows

@@ -1,0 +1,5 @@
+entity.localgov_service_contact.collection:
+  title: 'Service contacts'
+  description: 'List of service contacts.'
+  route_name: entity.localgov_service_contact.collection
+  parent: system.admin_content

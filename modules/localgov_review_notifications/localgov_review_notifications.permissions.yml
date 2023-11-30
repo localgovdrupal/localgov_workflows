@@ -1,0 +1,11 @@
+administer localgov_service_contact:
+  title: 'Administer service contacts'
+  restrict access: true
+view localgov_service_contact:
+  title: 'View service contact'
+edit localgov_service_contact:
+  title: 'Edit service contact'
+delete localgov_service_contact:
+  title: 'Delete service contact'
+create localgov_service_contact:
+  title: 'Create service contact'
