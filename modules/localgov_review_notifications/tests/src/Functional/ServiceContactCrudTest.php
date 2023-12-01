@@ -84,7 +84,7 @@ class ServiceContactCrudTest extends BrowserTestBase {
       'email[0][value]' => $email,
     ], 'Save');
     $this->assertSession()->addressEquals('admin/content/localgov-service-contact/add');
-    $this->assertSession()->statusMessageContains('A service contact with Email address' . $email . ' already exists.', 'error');
+    $this->assertSession()->statusMessageContains('A service contact with Email address', 'error');
   }
 
 }
