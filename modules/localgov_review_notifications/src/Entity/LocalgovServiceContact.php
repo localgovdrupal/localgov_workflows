@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\localgov_review_notifications\Entity\LocalgovServiceContactInterface;
 
 /**
@@ -68,6 +69,40 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
   /**
    * {@inheritdoc}
    */
+  public function getEmail(): string|null {
+    if ($user = $this->getUser()) {
+      return $user->getEmail();
+    }
+    return $this->get('email')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getName(): string|null {
+    if ($user = $this->getUser()) {
+      return $user->getDisplayName();
+    }
+    return $this->get('name')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUser(): AccountInterface|null {
+    return $this->get('user')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->getName() . ' <' . $this->getEmail() . '>';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
 
     $fields = parent::baseFieldDefinitions($entity_type);
@@ -88,7 +123,12 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
     $fields['user'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Drupal user'))
       ->setDescription(t('The username of a Drupal user.'))
-      ->setSetting('target_type', 'user')
+      ->setSettings([
+        'target_type' => 'user',
+        'handler_settings' => [
+          'include_anonymous' => FALSE,
+        ],
+      ])
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
@@ -117,8 +157,8 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['email'] = BaseFieldDefinition::create('email')
-      ->setLabel(t('E-mail address'))
-      ->setDescription(t('The e-mail address of the service contact.'))
+      ->setLabel(t('Email address'))
+      ->setDescription(t('The email address of the service contact.'))
       ->setDefaultValue('')
       ->setDisplayOptions('form', [
         'type' => 'email_default',
@@ -130,8 +170,9 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
     $fields['enabled'] = BaseFieldDefinition::create('boolean')
       ->setRevisionable(TRUE)
       ->setLabel(t('Notifications enabled'))
+      ->setDescription(t('Are notifications enabled for the service contact?'))
       ->setDefaultValue(TRUE)
-      ->setSetting('on_label', 'Enabled')
+      ->setSetting('on_label', 'Notifications enabled')
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'settings' => [

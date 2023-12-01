@@ -14,12 +14,10 @@ final class LocalgovServiceContactListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader(): array {
-    $header['user'] = $this->t('Drupal user');
-    $header['name'] = $this->t('Service contact name');
-    $header['email'] = $this->t('Service contact email');
-    $header['enabled'] = $this->t('Notifications');
-    $header['created'] = $this->t('Created');
-    $header['changed'] = $this->t('Updated');
+    $header['name'] = $this->t('Service contact');
+    $header['email'] = $this->t('Email');
+    $header['enabled'] = $this->t('Notifications');;
+    $header['drupal_user'] = $this->t('Drupal user');
     return $header + parent::buildHeader();
   }
 
@@ -28,12 +26,19 @@ final class LocalgovServiceContactListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity): array {
     /** @var \Drupal\localgov_review_notifications\Entity\LocalgovServiceContactInterface $entity */
-    $row['user'] = $entity->get('user')->value;
-    $row['name'] = $entity->get('name')->value;
-    $row['email'] = $entity->get('email')->value;
+
+    if ($user = $entity->getUser()) {
+      $row['name']['data'] = [
+        '#theme' => 'username',
+        '#account' => $user,
+      ];
+    }
+    else {
+      $row['name'] = $entity->getName();
+    }
+    $row['email'] = $entity->getEmail();
     $row['enabled'] = $entity->get('enabled')->value ? $this->t('Enabled') : $this->t('Disabled');
-    $row['created']['data'] = $entity->get('created')->view(['label' => 'hidden']);
-    $row['changed']['data'] = $entity->get('changed')->view(['label' => 'hidden']);
+    $row['drupal_user'] = $user ? '✔' : '';
     return $row + parent::buildRow($entity);
   }
 

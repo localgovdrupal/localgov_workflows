@@ -4,6 +4,7 @@ namespace Drupal\localgov_review_notifications\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use function PHPUnit\Framework\isNan;
 
 /**
  * Form controller for the service contact entity edit forms.
@@ -63,7 +64,29 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
+    $uid = $form_state->getValue('user')[0]['target_id'];
+    $name = $form_state->getValue('name')[0]['value'];
+    $email = $form_state->getValue('email')[0]['value'];
 
+    // Ensure either user or name and email are set.
+    if ($uid == '' && ($name == '' || $email == '')) {
+      $form_state->setError($form['instructions'], $this->t('Either a Drupal user or a name and an email address are required.'));
+    }
+
+    if (!is_null($uid)) {
+      // Check not anonymous user.
+      if ($uid == 0) {
+        $form_state->setError($form['user'], $this->t('You cannot associated the Anonymous user with a service contact.'));
+      }
+
+      // Check user isn't already associated with a service contact.
+      $service_contacts = $this->entityTypeManager
+        ->getStorage('localgov_service_contact')
+        ->loadByProperties(['user' => $uid]);
+      if (!empty($service_contacts)) {
+        $form_state->setError($form['user'], $this->t('The user is already associated with a service contact.'));
+      }
+    }
   }
 
   /**
@@ -72,21 +95,17 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
   public function save(array $form, FormStateInterface $form_state): int {
     $result = parent::save($form, $form_state);
 
-    $message_args = ['%label' => $this->entity->toLink()->toString()];
-    $logger_args = [
-      '%label' => $this->entity->label(),
-      'link' => $this->entity->toLink($this->t('View'))->toString(),
-    ];
+    $args = ['%label' => $this->entity->label()];
 
     switch ($result) {
       case SAVED_NEW:
-        $this->messenger()->addStatus($this->t('New service contact %label has been created.', $message_args));
-        $this->logger('localgov_review_notifications')->notice('New service contact %label has been created.', $logger_args);
+        $this->messenger()->addStatus($this->t('New service contact %label has been created.', $args));
+        $this->logger('localgov_review_notifications')->notice('New service contact %label has been created.', $args);
         break;
 
       case SAVED_UPDATED:
-        $this->messenger()->addStatus($this->t('The service contact %label has been updated.', $message_args));
-        $this->logger('localgov_review_notifications')->notice('The service contact %label has been updated.', $logger_args);
+        $this->messenger()->addStatus($this->t('The service contact %label has been updated.', $args));
+        $this->logger('localgov_review_notifications')->notice('The service contact %label has been updated.', $args);
         break;
 
       default:
