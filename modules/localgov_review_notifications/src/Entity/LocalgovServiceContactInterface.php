@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace Drupal\localgov_review_notifications\Entity;
 
@@ -34,4 +34,5 @@ interface LocalgovServiceContactInterface extends ContentEntityInterface, Entity
    *   The user account.
    */
   public function getUser(): AccountInterface|null;
+
 }

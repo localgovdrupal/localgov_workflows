@@ -1,10 +1,9 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace Drupal\localgov_review_notifications\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use function PHPUnit\Framework\isNan;
 
 /**
  * Form controller for the service contact entity edit forms.
@@ -15,9 +14,7 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\localgov_review_notifications\Entity\LocalgovServiceContact */
     $form = parent::buildForm($form, $form_state);
-    $entity = $this->entity;
 
     // Add conditional logic to ensure either user or name and email are set.
     $form['instructions'] = [
@@ -45,12 +42,12 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
     $form['user']['widget'][0]['target_id']['#states'] = [
       'enabled' => [
         ':input[name="email[0][value]"]' => ['value' => ''],
-        'and',
+        'and' => '',
         ':input[name="name[0][value]"]' => ['value' => ''],
       ],
       'required' => [
         ':input[name="email[0][value]"]' => ['value' => ''],
-        'and',
+        'and' => '',
         ':input[name="name[0][value]"]' => ['value' => ''],
       ],
     ];
@@ -67,6 +64,7 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
     $uid = $form_state->getValue('user')[0]['target_id'];
     $name = $form_state->getValue('name')[0]['value'];
     $email = $form_state->getValue('email')[0]['value'];
+    $service_contact = $form_state->getFormObject()->getEntity();
 
     // Ensure either user or name and email are set.
     if ($uid == '' && ($name == '' || $email == '')) {
@@ -80,11 +78,13 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
       }
 
       // Check user isn't already associated with a service contact.
-      $service_contacts = $this->entityTypeManager
-        ->getStorage('localgov_service_contact')
-        ->loadByProperties(['user' => $uid]);
-      if (!empty($service_contacts)) {
-        $form_state->setError($form['user'], $this->t('The user is already associated with a service contact.'));
+      if ($service_contact->isNew()) {
+        $service_contacts = $this->entityTypeManager
+          ->getStorage('localgov_service_contact')
+          ->loadByProperties(['user' => $uid]);
+        if (!empty($service_contacts)) {
+          $form_state->setError($form['user'], $this->t('The user is already associated with a service contact.'));
+        }
       }
     }
   }

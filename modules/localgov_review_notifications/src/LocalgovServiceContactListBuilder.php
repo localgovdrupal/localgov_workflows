@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace Drupal\localgov_review_notifications;
 
@@ -16,7 +16,7 @@ final class LocalgovServiceContactListBuilder extends EntityListBuilder {
   public function buildHeader(): array {
     $header['name'] = $this->t('Service contact');
     $header['email'] = $this->t('Email');
-    $header['enabled'] = $this->t('Notifications');;
+    $header['enabled'] = $this->t('Notifications');
     $header['drupal_user'] = $this->t('Drupal user');
     return $header + parent::buildHeader();
   }

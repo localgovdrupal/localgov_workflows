@@ -56,7 +56,7 @@ class ServiceContactCrudTest extends BrowserTestBase {
       'user[0][target_id]' => $this->user->getAccountName(),
     ], 'Save');
     $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
-    $this->assertSession()->statusMessageContains('New service contact', 'status');
+    $this->assertSession()->statusMessageContains('has been created', 'status');
     $this->assertSession()->pageTextContains($this->user->getDisplayName());
     $this->assertSession()->pageTextContains($this->user->getEmail());
     $this->drupalGet('admin/content/localgov-service-contact/add');
@@ -75,7 +75,7 @@ class ServiceContactCrudTest extends BrowserTestBase {
       'email[0][value]' => $email,
     ], 'Save');
     $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
-    $this->assertSession()->statusMessageContains('New service contact', 'status');
+    $this->assertSession()->statusMessageContains('has been created', 'status');
     $this->assertSession()->pageTextContains($name);
     $this->assertSession()->pageTextContains($email);
     $this->drupalGet('admin/content/localgov-service-contact/add');
@@ -85,6 +85,39 @@ class ServiceContactCrudTest extends BrowserTestBase {
     ], 'Save');
     $this->assertSession()->addressEquals('admin/content/localgov-service-contact/add');
     $this->assertSession()->statusMessageContains('A service contact with Email address', 'error');
+
+    // Test updating service contacts.
+    $this->drupalGet('admin/content/localgov-service-contact');
+    $this->assertSession()->pageTextContains('Enabled');
+    $this->drupalGet('admin/content/localgov-service-contact/1/edit');
+    $this->getSession()->getPage()->uncheckField('enabled[value]');
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
+    $this->assertSession()->statusMessageContains('has been update', 'status');
+    $this->assertSession()->pageTextContains('Disabled');
+    $this->assertSession()->pageTextContains('Enabled');
+    $this->drupalGet('admin/content/localgov-service-contact/2/edit');
+    $this->getSession()->getPage()->uncheckField('enabled[value]');
+    $this->getSession()->getPage()->pressButton('Save');
+    $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
+    $this->assertSession()->statusMessageContains('has been update', 'status');
+    $this->assertSession()->pageTextNotContains('Enabled');
+
+    // Test deleting service contacts.
+    $this->drupalGet('admin/content/localgov-service-contact/1/delete');
+    $this->getSession()->getPage()->pressButton('Delete');
+    $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
+    $this->assertSession()->statusMessageContains('has been deleted', 'status');
+    $this->drupalGet('admin/content/localgov-service-contact');
+    $this->assertSession()->pageTextNotContains($this->user->getDisplayName());
+    $this->assertSession()->pageTextNotContains($this->user->getEmail());
+    $this->drupalGet('admin/content/localgov-service-contact/2/delete');
+    $this->getSession()->getPage()->pressButton('Delete');
+    $this->assertSession()->addressEquals('admin/content/localgov-service-contact');
+    $this->assertSession()->statusMessageContains('has been deleted', 'status');
+    $this->drupalGet('admin/content/localgov-service-contact');
+    $this->assertSession()->pageTextNotContains($name);
+    $this->assertSession()->pageTextNotContains($email);
   }
 
 }

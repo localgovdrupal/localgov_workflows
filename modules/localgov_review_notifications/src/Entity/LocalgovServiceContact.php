@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace Drupal\localgov_review_notifications\Entity;
 
@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\localgov_review_notifications\Entity\LocalgovServiceContactInterface;
 
 /**
  * Defines the service contact entity class.
@@ -187,7 +186,7 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
       ->setDescription(t('Notes in plain-text format'))
       ->setDisplayOptions('form', [
         'type' => 'text_long',
-        'weight' => 5
+        'weight' => 5,
       ])
       ->setDisplayConfigurable('form', TRUE);
 

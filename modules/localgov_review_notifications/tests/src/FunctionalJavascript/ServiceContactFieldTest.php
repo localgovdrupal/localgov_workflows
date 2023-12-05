@@ -74,4 +74,5 @@ class ServiceContactFieldTest extends WebDriverTestBase {
     $this->assertSession()->fieldEnabled('name[0][value]');
     $this->assertSession()->fieldEnabled('email[0][value]');
   }
+
 }
