@@ -4,3 +4,46 @@
  * @file
  * Primary module hooks for LocalGov Review Notifications module.
  */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function localgov_review_notifications_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+
+  // Add service contacts field to nodes.
+  if ($entity_type->id() === 'node') {
+    $fields['localgov_service_contacts'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Service contacts'))
+      ->setDescription(t('The service contacts for this node.'))
+      ->setSetting('target_type', 'localgov_service_contact')
+      ->setSetting('handler', 'default')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'service_contacts_widget',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ],
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Implements hook_entity_field_storage_info().
+ */
+function localgov_review_notifications_entity_field_storage_info(EntityTypeInterface $entity_type) {
+
+  // Add service contact field storage.
+  if ($entity_type->id() === 'node') {
+    return localgov_review_notifications_entity_bundle_field_info($entity_type, '', []);
+  }
+}

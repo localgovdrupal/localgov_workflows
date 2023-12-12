@@ -18,7 +18,7 @@ use Drupal\Core\Session\AccountInterface;
  *   label_singular = @Translation("service contact"),
  *   label_plural = @Translation("service contacts"),
  *   label_count = @PluralTranslation(
- *     singular = "@count service contacts",
+ *     singular = "@count service contact",
  *     plural = "@count service contacts",
  *   ),
  *   handlers = {
