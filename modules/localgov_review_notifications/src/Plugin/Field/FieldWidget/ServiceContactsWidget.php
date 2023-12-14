@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @FieldWidget(
  *   id = "service_contacts_widget",
  *   label = @Translation("Service contacts"),
+ *   description = @Translation("An autocomplete service contacts widget."),
  *   field_types = {
  *     "entity_reference",
  *   },

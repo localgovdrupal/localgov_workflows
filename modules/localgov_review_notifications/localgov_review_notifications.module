@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_entity_bundle_field_info().
@@ -17,13 +18,12 @@ function localgov_review_notifications_entity_bundle_field_info(EntityTypeInterf
   // Add service contacts field to nodes.
   if ($entity_type->id() === 'node') {
     $fields['localgov_service_contacts'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Service contacts'))
-      ->setDescription(t('The service contacts for this node.'))
+      ->setLabel('Service contacts')
       ->setSetting('target_type', 'localgov_service_contact')
-      ->setSetting('handler', 'default')
+      ->setSetting('handler', 'service_contact_reference')
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setDisplayOptions('form', [
-        'type' => 'service_contacts_widget',
+        'type' => 'entity_reference_autocomplete',
         'settings' => [
           'match_operator' => 'CONTAINS',
           'size' => 60,
@@ -38,12 +38,66 @@ function localgov_review_notifications_entity_bundle_field_info(EntityTypeInterf
 }
 
 /**
- * Implements hook_entity_field_storage_info().
+ * Implements hook_form_alter().
  */
-function localgov_review_notifications_entity_field_storage_info(EntityTypeInterface $entity_type) {
+function localgov_review_notifications_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
-  // Add service contact field storage.
-  if ($entity_type->id() === 'node') {
-    return localgov_review_notifications_entity_bundle_field_info($entity_type, '', []);
+  // Add service contacts field advanced group on node edit forms.
+  if (isset($form['localgov_service_contacts']) && isset($form['advanced'])) {
+    $form['service_contacts'] = [
+      '#type' => 'details',
+      '#title' => t('Service contacts'),
+      '#description' => t('Search for a service contact by name or email.'),
+      '#group' => 'advanced',
+      '#open' => FALSE,
+    ];
+    $form['localgov_service_contacts']['#group'] = 'service_contacts';
+
+    // Remove field weight.
+    foreach ($form['localgov_service_contacts']['widget'] as $i => $item) {
+      if (is_array($item) && isset($item['_weight'])) {
+        unset($form['localgov_service_contacts']['widget'][$i]['_weight']);
+      }
+    }
+  }
+
+  // Add our custom validation handler.
+  if (isset($form['localgov_service_contacts'])) {
+    $form['#validate'][] = 'localgov_review_notifications_node_form_validate';
+  }
+}
+
+/**
+ * Custom validation handler for node forms.
+ */
+function localgov_review_notifications_node_form_validate($form, &$form_state) {
+
+  // Ensure the service contacts field is unique.
+  $localgov_service_contacts = $form_state->getValue('localgov_service_contacts');
+  $values = [];
+  foreach ($localgov_service_contacts as $value) {
+    if (is_array($value) && !empty($value['target_id'])) {
+      if (in_array($value['target_id'], $values)) {
+        $form_state->setError($form['localgov_service_contacts'], t('Service contacts must be unique.'));
+        return;
+      }
+      $values[] = $value['target_id'];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field_multiple_value_form.
+ */
+function localgov_review_notifications_preprocess_field_multiple_value_form(&$variables) {
+
+  // Remove title and ordering from service contacts field.
+  if ($variables['element']['#field_name'] === 'localgov_service_contacts') {
+    if (isset($variables['table']['#header'])) {
+      unset($variables['table']['#header']);
+    }
+    if (isset($variables['table']['#tabledrag'])) {
+      unset($variables['table']['#tabledrag']);
+    }
   }
 }
