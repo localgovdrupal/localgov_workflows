@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications\Plugin\EntityReferenceSelection;
+namespace Drupal\localgov_workflows_notifications\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Entity\Query\QueryInterface;

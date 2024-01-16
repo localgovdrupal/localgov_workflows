@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications\Form;
+namespace Drupal\localgov_workflows_notifications\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -100,12 +100,12 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
     switch ($result) {
       case SAVED_NEW:
         $this->messenger()->addStatus($this->t('New service contact %label has been created.', $args));
-        $this->logger('localgov_review_notifications')->notice('New service contact %label has been created.', $args);
+        $this->logger('localgov_workflows_notifications')->notice('New service contact %label has been created.', $args);
         break;
 
       case SAVED_UPDATED:
         $this->messenger()->addStatus($this->t('The service contact %label has been updated.', $args));
-        $this->logger('localgov_review_notifications')->notice('The service contact %label has been updated.', $args);
+        $this->logger('localgov_workflows_notifications')->notice('The service contact %label has been updated.', $args);
         break;
 
       default:

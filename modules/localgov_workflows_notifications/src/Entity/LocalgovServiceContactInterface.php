@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications\Entity;
+namespace Drupal\localgov_workflows_notifications\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;

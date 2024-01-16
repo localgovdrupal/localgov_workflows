@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_entity_bundle_field_info().
  */
-function localgov_review_notifications_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+function localgov_workflows_notifications_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
 
   // Add service contacts field to nodes.
   if ($entity_type->id() === 'node') {
@@ -40,7 +40,7 @@ function localgov_review_notifications_entity_bundle_field_info(EntityTypeInterf
 /**
  * Implements hook_form_alter().
  */
-function localgov_review_notifications_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function localgov_workflows_notifications_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
   // Add service contacts field advanced group on node edit forms.
   if (isset($form['localgov_service_contacts']) && isset($form['advanced'])) {
@@ -63,14 +63,14 @@ function localgov_review_notifications_form_alter(&$form, FormStateInterface $fo
 
   // Add our custom validation handler.
   if (isset($form['localgov_service_contacts'])) {
-    $form['#validate'][] = 'localgov_review_notifications_node_form_validate';
+    $form['#validate'][] = 'localgov_workflows_notifications_node_form_validate';
   }
 }
 
 /**
  * Custom validation handler for node forms.
  */
-function localgov_review_notifications_node_form_validate($form, &$form_state) {
+function localgov_workflows_notifications_node_form_validate($form, &$form_state) {
 
   // Ensure the service contacts field is unique.
   $localgov_service_contacts = $form_state->getValue('localgov_service_contacts');
@@ -89,7 +89,7 @@ function localgov_review_notifications_node_form_validate($form, &$form_state) {
 /**
  * Implements hook_preprocess_HOOK() for field_multiple_value_form.
  */
-function localgov_review_notifications_preprocess_field_multiple_value_form(&$variables) {
+function localgov_workflows_notifications_preprocess_field_multiple_value_form(&$variables) {
 
   // Remove title and ordering from service contacts field.
   if ($variables['element']['#field_name'] === 'localgov_service_contacts') {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\localgov_review_notifications\Functional;
+namespace Drupal\Tests\localgov_workflows_notifications\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -23,7 +23,7 @@ class ServiceContactCrudTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'localgov_review_notifications',
+    'localgov_workflows_notifications',
   ];
 
   /**

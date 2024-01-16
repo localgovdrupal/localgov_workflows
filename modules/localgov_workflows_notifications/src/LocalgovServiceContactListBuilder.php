@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications;
+namespace Drupal\localgov_workflows_notifications;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -25,7 +25,7 @@ final class LocalgovServiceContactListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity): array {
-    /** @var \Drupal\localgov_review_notifications\Entity\LocalgovServiceContactInterface $entity */
+    /** @var \Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContactInterface $entity */
 
     if ($user = $entity->getUser()) {
       $row['name']['data'] = [

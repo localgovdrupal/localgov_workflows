@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - localgov_review_notifications
+    - localgov_workflows_notifications
     - node
 id: node.localgov_service_contacts
 field_name: localgov_service_contacts
@@ -10,7 +10,7 @@ entity_type: node
 type: entity_reference
 settings:
   target_type: localgov_service_contact
-module: localgov_review_notifications
+module: localgov_workflows_notifications
 locked: false
 cardinality: -1
 translatable: true

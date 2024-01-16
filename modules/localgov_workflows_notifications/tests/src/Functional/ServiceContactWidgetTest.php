@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\localgov_review_notifications\Functional;
+namespace Drupal\Tests\localgov_workflows_notifications\Functional;
 
-use Drupal\localgov_review_notifications\Entity\LocalgovServiceContact;
+use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 
@@ -25,13 +25,13 @@ class ServiceContactWidgetTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'localgov_review_notifications',
+    'localgov_workflows_notifications',
   ];
 
   /**
    * Service contacts.
    *
-   * @var \Drupal\localgov_review_notifications\Entity\LocalgovServiceContact[]
+   * @var \Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact[]
    */
   protected $serviceContacts = [];
 

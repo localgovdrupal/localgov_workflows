@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications\Plugin\Field\FieldWidget;
+namespace Drupal\localgov_workflows_notifications\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;

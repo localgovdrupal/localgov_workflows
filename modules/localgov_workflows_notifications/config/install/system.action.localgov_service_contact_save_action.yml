@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - localgov_review_notifications
+    - localgov_workflows_notifications
 id: localgov_service_contact_save_action
 label: 'Save service contacts'
 type: localgov_service_contact

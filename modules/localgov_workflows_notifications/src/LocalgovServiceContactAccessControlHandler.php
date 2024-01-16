@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications;
+namespace Drupal\localgov_workflows_notifications;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;

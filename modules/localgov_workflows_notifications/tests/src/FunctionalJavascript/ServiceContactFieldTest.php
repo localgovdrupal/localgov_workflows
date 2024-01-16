@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\localgov_review_notifications\FunctionalJavascript;
+namespace Drupal\Tests\localgov_workflows_notifications\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
@@ -23,7 +23,7 @@ class ServiceContactFieldTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'localgov_review_notifications',
+    'localgov_workflows_notifications',
   ];
 
   /**

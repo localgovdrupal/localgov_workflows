@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\localgov_review_notifications\Entity;
+namespace Drupal\localgov_workflows_notifications\Entity;
 
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -22,12 +22,12 @@ use Drupal\Core\Session\AccountInterface;
  *     plural = "@count service contacts",
  *   ),
  *   handlers = {
- *     "list_builder" = "Drupal\localgov_review_notifications\LocalgovServiceContactListBuilder",
+ *     "list_builder" = "Drupal\localgov_workflows_notifications\LocalgovServiceContactListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
- *     "access" = "Drupal\localgov_review_notifications\LocalgovServiceContactAccessControlHandler",
+ *     "access" = "Drupal\localgov_workflows_notifications\LocalgovServiceContactAccessControlHandler",
  *     "form" = {
- *       "add" = "Drupal\localgov_review_notifications\Form\LocalgovServiceContactForm",
- *       "edit" = "Drupal\localgov_review_notifications\Form\LocalgovServiceContactForm",
+ *       "add" = "Drupal\localgov_workflows_notifications\Form\LocalgovServiceContactForm",
+ *       "edit" = "Drupal\localgov_workflows_notifications\Form\LocalgovServiceContactForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },
