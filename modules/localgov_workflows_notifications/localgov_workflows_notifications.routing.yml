@@ -2,6 +2,6 @@ localgov_workflows_notifications.settings:
   path: '/admin/config/workflow/localgov-workflows-notifications'
   defaults:
     _title: 'LocalGov workflow notifications'
-    _form: 'Drupal\localgov_workflows_notifications\Form\SettingsForm'
+    _form: 'Drupal\localgov_workflows_notifications\Form\LocalgovWorkflowsNotificationsSettingsForm'
   requirements:
     _permission: 'administer localgov_workflows_notifications'

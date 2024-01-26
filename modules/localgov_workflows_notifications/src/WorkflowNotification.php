@@ -51,7 +51,7 @@ class WorkflowNotification implements WorkflowNotificationInterface {
     if (!empty($service_contacts)) {
       foreach ($service_contacts as $contact) {
 
-        // Ensure the queue contains only one item for per service contact and type.
+        // Ensure the queue contains only one item for per service contact.
         $found = FALSE;
         while (!$found && $item = $queue->claimItem(1)) {
           if ($item->data['service_contact'] == $contact->id() && $item->data['type'] == $type) {

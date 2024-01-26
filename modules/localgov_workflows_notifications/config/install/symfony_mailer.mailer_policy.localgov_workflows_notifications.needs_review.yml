@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - localgov_workflows_notifications
+id: localgov_workflows_notifications.needs_review
+configuration:
+  email_body:
+    content:
+      value: "Dear {{ service_contact.label }},\r\n\r\n{% for entity in entities %}\r\n{{ entity.label }}\r\n{% endfor %}\r\n"
+      format: email_html

@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Configure LocalGov Workflows Notifications settings for the site.
  */
-final class SettingsForm extends ConfigFormBase {
+final class LocalgovWorkflowsNotificationsSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
@@ -43,13 +43,6 @@ final class SettingsForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
-    parent::validateForm($form, $form_state);
   }
 
   /**

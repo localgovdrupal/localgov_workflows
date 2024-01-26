@@ -5,3 +5,5 @@ package: LocalGov Drupal
 core_version_requirement: ^9 || ^10
 dependencies:
   - localgov_workflows:localgov_workflows
+  - symfony_mailer:symfony_mailer
+configure: localgov_workflows_notifications.settings

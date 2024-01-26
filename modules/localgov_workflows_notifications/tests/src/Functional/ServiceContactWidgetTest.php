@@ -44,12 +44,13 @@ class ServiceContactWidgetTest extends BrowserTestBase {
 
   /**
    * Service contact manual user.
+   *
+   * @var array
    */
   protected $manualUser = [
     'name' => 'Test User',
     'email' => 'test.user@example.com',
   ];
-
 
   /**
    * {@inheritdoc}
