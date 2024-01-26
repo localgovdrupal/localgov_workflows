@@ -3,3 +3,10 @@ entity.localgov_service_contact.collection:
   description: 'List of service contacts.'
   route_name: entity.localgov_service_contact.collection
   parent: system.admin_content
+
+localgov_workflows_notifications.settings:
+  title: 'LocalGov workflow notifications'
+  description: 'Administer LocalGov workflow notifications'
+  parent: system.admin_config_workflow
+  route_name: localgov_workflows_notifications.settings
+  weight: 10

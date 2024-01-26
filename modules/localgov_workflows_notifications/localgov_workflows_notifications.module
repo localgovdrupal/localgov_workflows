@@ -101,3 +101,50 @@ function localgov_workflows_notifications_preprocess_field_multiple_value_form(&
     }
   }
 }
+
+/**
+ * Implements hook_cron().
+ */
+function localgov_workflows_notifications_cron(): void {
+
+  // Don't proceed if email notifications are disabled.
+  $settings = \Drupal::config('localgov_workflows_notifications.settings');
+  if (!$settings->get('email_enabled')) {
+    return;
+  }
+
+  // Don't proceed if localgov_review_date module is not enabled.
+  if (!\Drupal::moduleHandler()->moduleExists('localgov_review_date')) {
+    return;
+  }
+
+  // Enqueue email notification for content past its needs review date.
+  $last_run = \Drupal::state()->get('localgov_workflows_notifications.last_email_run', 0);
+  $next_run = $last_run + 86400 * $settings->get('email_frequency');
+  $request_time = \Drupal::time()->getRequestTime();
+  if ($request_time >= $next_run) {
+
+    // Get review date IDs that need have passed their review date.
+    $storage = \Drupal::entityTypeManager()->getStorage('review_date');
+    $review_date_ids = $storage->getQuery()
+      ->condition('active', 1)
+      ->condition('review', $last_run, '>')
+      ->condition('review', $request_time, '<=')
+      ->accessCheck(FALSE)
+      ->execute();
+
+    if (!empty($review_date_ids)) {
+
+      // Create email notifications.
+      $notifier = \Drupal::service('localgov_workflows_notifications.notifier');
+      foreach ($review_date_ids as $id) {
+        $review_date = $storage->load($id);
+        if ($entity = $review_date->getEntity()) {
+          $notifier->enqueue($entity, 'needs_review');
+        }
+      }
+    }
+
+    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $request_time);
+  }
+}
