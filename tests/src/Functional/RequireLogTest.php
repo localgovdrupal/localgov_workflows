@@ -67,7 +67,7 @@ class RequireLogTest extends BrowserTestBase {
     // Enabling field_ui will change that button.
     $this->submitForm([
       'options[revision_required]' => TRUE,
-    ], 'Save content type');
+    ], 'Save');
 
     $this->drupalGet('/node/add/require_log_test');
     $log_field = $this->assertSession()->fieldExists('revision_log[0][value]');
@@ -79,7 +79,7 @@ class RequireLogTest extends BrowserTestBase {
     $this->assertTrue($checkbox->isChecked());
     $this->submitForm([
       'options[revision_required]' => FALSE,
-    ], 'Save content type');
+    ], 'Save');
 
     $this->drupalGet('/node/add/require_log_test');
     $log_field = $this->assertSession()->fieldExists('revision_log[0][value]');
@@ -91,7 +91,7 @@ class RequireLogTest extends BrowserTestBase {
     $this->assertFalse($checkbox->isChecked());
     $this->submitForm([
       'options[revision_required]' => TRUE,
-    ], 'Save content type');
+    ], 'Save');
 
     $this->drupalGet('/node/add/require_log_test');
     $log_field = $this->assertSession()->fieldExists('revision_log[0][value]');
@@ -103,7 +103,7 @@ class RequireLogTest extends BrowserTestBase {
     $this->assertTrue($checkbox->isChecked());
     $this->submitForm([
       'options[revision]' => FALSE,
-    ], 'Save content type');
+    ], 'Save');
     $this->drupalGet('/node/add/require_log_test');
     $log_field = $this->assertSession()->fieldNotExists('revision_log[0][value]');
     $this->drupalGet('/admin/structure/types/manage/require_log_test');
