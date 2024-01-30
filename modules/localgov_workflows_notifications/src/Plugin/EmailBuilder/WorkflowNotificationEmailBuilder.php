@@ -2,7 +2,6 @@
 
 namespace Drupal\localgov_workflows_notifications\Plugin\EmailBuilder;
 
-use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContactInterface;
 use Drupal\symfony_mailer\EmailInterface;
 use Drupal\symfony_mailer\Processor\EmailBuilderBase;
@@ -50,7 +49,7 @@ class WorkflowNotificationEmailBuilder extends EmailBuilderBase {
     $email->setTo($service_contact->getEmail())
       ->setVariable('date', date('j-M-Y', strtotime('today')))
       ->setVariable('entities', $entities)
-      ->setVariable('service_contact', $service_contact) ;
+      ->setVariable('service_contact', $service_contact);
   }
 
 }

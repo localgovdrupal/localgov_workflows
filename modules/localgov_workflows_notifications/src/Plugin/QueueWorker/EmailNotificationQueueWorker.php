@@ -4,8 +4,9 @@ namespace Drupal\localgov_workflows_notifications\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\symfony_mailer\EmailFactoryInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\symfony_mailer\EmailFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,6 +19,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class EmailNotificationQueueWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+
+
+  /**
+   * Prefix of queue to add notifications to.
+   *
+   * @var string
+   */
+  const QUEUE_NAME = 'localgov_workflows_notifications_email';
 
   /**
    * The email factory service.
@@ -68,24 +77,22 @@ class EmailNotificationQueueWorker extends QueueWorkerBase implements ContainerF
     }
     $service_contact = $this->entityTypeManager->getStorage('localgov_service_contact')->load($data->service_contact);
 
-    try {
-      $email = $this->emailFactory->sendTypedEmail('localgov_workflows_notifications', $type, $service_contact, $entities);
-      \Drupal::logger('localgov_workflows_notifications')
-        ->notice('Sent email @type notification to @contact', [
-          '@type' => $type,
-          '@contact' => $service_contact->label(),
-        ]);
-    }
-    catch (\Exception $e) {
-      print_r($e);
+    // Send email to service contact.
+    $email = $this->emailFactory->sendTypedEmail('localgov_workflows_notifications', $type, $service_contact, $entities);
+    if (!is_null($error = $email->getError())) {
       \Drupal::logger('localgov_workflows_notifications')
         ->error('Failed to send email @type notification to @contact: @error', [
           '@type' => $type,
           '@contact' => $service_contact->label(),
-          '@error' => $e->getMessage(),
+          '@error' => $error,
         ]);
+      throw new SuspendQueueException($error);
     }
-
+    \Drupal::logger('localgov_workflows_notifications')
+      ->notice('Sent email @type notification to @contact', [
+        '@type' => $type,
+        '@contact' => $service_contact->label(),
+      ]);
   }
 
 }

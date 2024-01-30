@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - localgov_workflows_notifications
+id: localgov_workflows_notifications
+configuration:
+  email_body:
+    content:
+      value: "<p>&lt;p&gt;Dear {{ service_contact.getName() }},&lt;/p&gt;<br>&lt;p&gt;The following content needs review:&lt;/p&gt;<br>&lt;ul&gt;<br>{% for entity in entities %}<br>&nbsp;&lt;li&gt;&lt;a href=\"{{ path('entity.node.canonical', {'node': entity.id}) }}\"&gt;{{ entity.label }}&lt;/a&gt;&lt;/li&gt;<br>{% endfor %}<br>&lt;/ul&gt;<br>&nbsp;</p>"
+      format: wysiwyg
+  email_subject:
+    value: 'Content needing review on the [site:name] site'
+  email_theme:
+    theme: _default

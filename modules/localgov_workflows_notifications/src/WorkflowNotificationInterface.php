@@ -16,9 +16,7 @@ interface WorkflowNotificationInterface {
    *   The entity to send a notification for.
    * @param string $type
    *   The type of notification.
-   * @param string $method
-   *   The notification method. Only 'email' is supported at this time.
    */
-  public function enqueue(ContentEntityInterface $entity, string $type, string $method = 'email'): void;
+  public function enqueue(ContentEntityInterface $entity, string $type): void;
 
 }

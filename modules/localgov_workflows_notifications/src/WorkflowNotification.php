@@ -4,20 +4,12 @@ namespace Drupal\localgov_workflows_notifications;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\localgov_workflows_notifications\Plugin\QueueWorker\EmailNotificationQueueWorker;
 
 /**
  * Enqueue a notification to be sent.
  */
 class WorkflowNotification implements WorkflowNotificationInterface {
-
-  /**
-   * Prefix of queue to add notifications to.
-   *
-   * This is combined with the notification method to create the queue name.
-   *
-   * @var string
-   */
-  const QUEUE_PREFIX = 'localgov_workflows_notifications_';
 
   /**
    * The queue factory.
@@ -36,14 +28,8 @@ class WorkflowNotification implements WorkflowNotificationInterface {
   /**
    * {@inheritdoc}
    */
-  public function enqueue(ContentEntityInterface $entity, string $type, string $method = 'email'): void {
-
-    // Only email notifications are supported at this time.
-    if ($method !== 'email') {
-      throw new \Exception('Only email notifications are supported at this time.');
-    }
-
-    $queue_name = self::QUEUE_PREFIX . $method;
+  public function enqueue(ContentEntityInterface $entity, string $type): void {
+    $queue_name = EmailNotificationQueueWorker::QUEUE_NAME;
     $queue = $this->queueFactory->get($queue_name);
 
     // Add notifications to service contacts to queue.
@@ -53,15 +39,17 @@ class WorkflowNotification implements WorkflowNotificationInterface {
 
         // Ensure the queue contains only one item for per service contact.
         $found = FALSE;
-        while (!$found && $item = $queue->claimItem(1)) {
-          if ($item->data['service_contact'] == $contact->id() && $item->data['type'] == $type) {
-            $item->data['entities'][] = [
+        while ($item = $queue->claimItem(1)) {
+          print_r($item);
+          if ($item->data->service_contact == $contact->id() && $item->data->type == $type) {
+            $item->data->entities[] = [
               'entity_id' => $entity->id(),
               'entity_type' => $entity->getEntityTypeId(),
             ];
             $found = TRUE;
+            break;
           }
-          $item->releaseItem($item);
+          $queue->releaseItem($item);
         }
 
         if (!$found) {
