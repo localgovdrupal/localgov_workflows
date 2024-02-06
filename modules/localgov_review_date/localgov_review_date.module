@@ -50,7 +50,6 @@ function localgov_review_date_form_node_form_alter(&$form, FormStateInterface $f
   }
 }
 
-
 /**
  * Implements hook_form_FORM_ID_alter().
  */
