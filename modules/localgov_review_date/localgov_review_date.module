@@ -8,29 +8,54 @@
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeForm;
 
 /**
- * Implements hook_entity_bundle_field_info().
+ * Implements hook_entity_base_field_info().
  */
-function localgov_review_date_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
-
-  // Add the review status field to nodes configured for scheduled transitions.
+function localgov_review_date_entity_base_field_info(EntityTypeInterface $entity_type) {
   if ($entity_type->id() === 'node') {
-    $scheduled_bundles = \Drupal::service('scheduled_transitions.utility')->getBundles();
+    $fields = [];
+    $fields['localgov_review_date'] = BaseFieldDefinition::create('review_date')
+      ->setLabel(t('Review date'))
+      ->setDisplayOptions('form', [
+        'type' => 'review_date',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setComputed(TRUE);
+    return $fields;
+  }
+}
 
-    if (isset($scheduled_bundles['node']) && in_array($bundle, $scheduled_bundles['node'])) {
-      $fields['localgov_review_date'] = BaseFieldDefinition::create('review_date')
-        ->setLabel(t('Review date'))
-        ->setDisplayOptions('form', [
-          'type' => 'review_date',
-          'weight' => -5,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setComputed(TRUE);
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function localgov_review_date_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  /** @var \Drupal\node\NodeForm $node_form */
+  $node_form = $form_state->getBuildInfo()['callback_object'];
 
-      return $fields;
+  if ($node_form instanceof NodeForm) {
+    /** @var \Drupal\node\NodeInterface */
+    $node = $node_form->getEntity();
+
+    /** @var \Drupal\scheduled_transitions\ScheduledTransitionsUtilityInterface $utility */
+    $utility = \Drupal::service('scheduled_transitions.utility');
+
+    $scheduled_bundles = $utility->getBundles();
+
+    if (!isset($scheduled_bundles['node']) || !in_array($node->bundle(), $scheduled_bundles['node'])) {
+      $form['localgov_review_date']['#access'] = FALSE;
     }
   }
+}
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function localgov_review_date_form_node_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  localgov_review_date_form_node_form_alter($form, $form_state, $form_id);
 }
 
 /**
