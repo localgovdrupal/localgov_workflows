@@ -35,4 +35,12 @@ interface LocalgovServiceContactInterface extends ContentEntityInterface, Entity
    */
   public function getUser(): AccountInterface|null;
 
+  /**
+   * Are notifications enabled for this service contact?
+   *
+   * @return bool
+   *   True if notifications are enabled.
+   */
+  public function isEnabled(): bool;
+
 }

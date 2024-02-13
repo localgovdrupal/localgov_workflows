@@ -95,6 +95,13 @@ final class LocalgovServiceContact extends RevisionableContentEntityBase impleme
   /**
    * {@inheritdoc}
    */
+  public function isEnabled(): bool {
+    return $this->get('enabled')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function label() {
     return $this->getName() . ' <' . $this->getEmail() . '>';
   }

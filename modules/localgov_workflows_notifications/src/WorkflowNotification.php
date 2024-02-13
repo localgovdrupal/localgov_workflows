@@ -37,6 +37,11 @@ class WorkflowNotification implements WorkflowNotificationInterface {
     if (!empty($service_contacts)) {
       foreach ($service_contacts as $contact) {
 
+        // Don't queue disabled service contacts.
+        if (!$contact->isEnabled()) {
+          continue;
+        }
+
         // Ensure the queue contains only one item for per service contact.
         $found = FALSE;
         while ($item = $queue->claimItem(1)) {

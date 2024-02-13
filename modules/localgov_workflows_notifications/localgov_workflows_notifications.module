@@ -11,9 +11,13 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements hook_entity_bundle_field_info().
+ * Implements hook_entity_base_field_info().
  */
-function localgov_workflows_notifications_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function localgov_workflows_notifications_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
 
   // Add service contacts field to nodes.
   if ($entity_type->id() === 'node') {
@@ -32,9 +36,9 @@ function localgov_workflows_notifications_entity_bundle_field_info(EntityTypeInt
         ],
       ])
       ->setDisplayConfigurable('form', TRUE);
-
-    return $fields;
   }
+
+  return $fields;
 }
 
 /**
@@ -49,7 +53,8 @@ function localgov_workflows_notifications_form_alter(&$form, FormStateInterface 
       '#title' => t('Service contacts'),
       '#description' => t('Search for a service contact by name or email.'),
       '#group' => 'advanced',
-      '#open' => FALSE,
+      '#open' => TRUE,
+      '#weight' => -4,
     ];
     $form['localgov_service_contacts']['#group'] = 'service_contacts';
 
