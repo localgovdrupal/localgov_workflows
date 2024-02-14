@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\localgov_workflows_notifications\Kernel;
 
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact;
 use Drupal\localgov_workflows_notifications\Plugin\QueueWorker\EmailNotificationQueueWorker;
@@ -47,6 +48,13 @@ class WorkflowNotificationTest extends KernelTestBase {
   protected WorkflowNotification $notifier;
 
   /**
+   * Email queue.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface
+   */
+  protected QueueInterface $queue;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -62,7 +70,7 @@ class WorkflowNotificationTest extends KernelTestBase {
     $this->serviceContacts['enabled'] = LocalgovServiceContact::create([
       'name' => $this->randomMachineName(),
       'email' => $this->randomMachineName() . '@example.com',
-      'status' => TRUE,
+      'enabled' => TRUE,
     ]);
     $this->serviceContacts['enabled']->save();
     $this->serviceContacts['disabled'] = LocalgovServiceContact::create([
@@ -74,7 +82,7 @@ class WorkflowNotificationTest extends KernelTestBase {
     $this->serviceContacts['another'] = LocalgovServiceContact::create([
       'name' => $this->randomMachineName(),
       'email' => $this->randomMachineName() . '@example.com',
-      'status' => TRUE,
+      'enabled' => TRUE,
     ]);
     $this->serviceContacts['another']->save();
 
@@ -84,15 +92,15 @@ class WorkflowNotificationTest extends KernelTestBase {
       'name' => 'Basic page',
     ]);
 
-    // Get the workflow notification service.
+    // Set services.
     $this->notifier = $this->container->get('localgov_workflows_notifications.notifier');
+    $this->queue = \Drupal::queue(EmailNotificationQueueWorker::QUEUE_NAME);
   }
 
   /**
    * Test enqueueing nodes for notifications.
    */
   public function testEnqueueNodes() {
-    $queue = \Drupal::queue(EmailNotificationQueueWorker::QUEUE_NAME);
 
     // Enqueue a notification.
     $node1 = $this->createNode([
@@ -103,12 +111,12 @@ class WorkflowNotificationTest extends KernelTestBase {
       ],
     ]);
     $this->notifier->enqueue($node1, 'review');
-    $this->assertEquals(1, $queue->numberOfItems());
-    $item = $queue->claimItem(0);
+    $this->assertEquals(1, $this->queue->numberOfItems());
+    $item = $this->queue->claimItem(0);
     $this->assertEquals(1, count($item->data->entities));
     $this->assertEquals($this->serviceContacts['enabled']->id(), $item->data->service_contact);
     $this->assertEquals('review', $item->data->type);
-    $queue->deleteItem($item);
+    $this->queue->deleteItem($item);
 
     // Enqueue a notification with disabled service contact.
     $node2 = $this->createNode([
@@ -119,7 +127,7 @@ class WorkflowNotificationTest extends KernelTestBase {
       ],
     ]);
     $this->notifier->enqueue($node2, 'review');
-    $this->assertEquals(0, $queue->numberOfItems());
+    $this->assertEquals(0, $this->queue->numberOfItems());
 
     // Enqueue a notification with same service contact.
     $node3 = $this->createNode([
@@ -131,12 +139,12 @@ class WorkflowNotificationTest extends KernelTestBase {
     ]);
     $this->notifier->enqueue($node1, 'review');
     $this->notifier->enqueue($node3, 'review');
-    $this->assertEquals(1, $queue->numberOfItems());
-    $item = $queue->claimItem(0);
+    $this->assertEquals(1, $this->queue->numberOfItems());
+    $item = $this->queue->claimItem(0);
     $this->assertEquals(2, count($item->data->entities));
-    $queue->releaseItem($item);
-    $item = $queue->claimItem(0);
-    $queue->deleteItem($item);
+    $this->queue->releaseItem($item);
+    $item = $this->queue->claimItem(0);
+    $this->queue->deleteItem($item);
 
     // Enqueue a notification with no service contact.
     $node4 = $this->createNode([
@@ -144,7 +152,7 @@ class WorkflowNotificationTest extends KernelTestBase {
       'title' => $this->randomMachineName(),
     ]);
     $this->notifier->enqueue($node4, 'review');
-    $this->assertEquals(0, $queue->numberOfItems());
+    $this->assertEquals(0, $this->queue->numberOfItems());
 
     // Enqueue a notification to multiple service contacts.
     $node5 = $this->createNode([
@@ -156,7 +164,7 @@ class WorkflowNotificationTest extends KernelTestBase {
       ],
     ]);
     $this->notifier->enqueue($node5, 'published');
-    $this->assertEquals(2, $queue->numberOfItems());
+    $this->assertEquals(2, $this->queue->numberOfItems());
 
     // Enqueue a notification with different type.
     $node6 = $this->createNode([
@@ -167,7 +175,7 @@ class WorkflowNotificationTest extends KernelTestBase {
       ],
     ]);
     $this->notifier->enqueue($node6, 'published');
-    $this->assertEquals(3, $queue->numberOfItems());
+    $this->assertEquals(3, $this->queue->numberOfItems());
   }
 
 }
