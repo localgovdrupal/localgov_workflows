@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @QueueWorker(
  *   id = "localgov_workflows_notifications_email",
  *   title = @Translation("Email queue worker"),
- *   cron = {"time" = 0}
+ *   cron = {"time" = 60}
  * )
  */
 class EmailNotificationQueueWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
