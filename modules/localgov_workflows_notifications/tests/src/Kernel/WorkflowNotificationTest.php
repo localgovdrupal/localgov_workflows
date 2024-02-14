@@ -98,9 +98,9 @@ class WorkflowNotificationTest extends KernelTestBase {
     $node1 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
-      'localgov_service_contacts' =>  [[
-        'target_id' => $this->serviceContacts['enabled']->id(),
-      ]],
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['enabled']->id()],
+      ],
     ]);
     $this->notifier->enqueue($node1, 'review');
     $this->assertEquals(1, $queue->numberOfItems());
@@ -114,9 +114,9 @@ class WorkflowNotificationTest extends KernelTestBase {
     $node2 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
-      'localgov_service_contacts' =>  [[
-        'target_id' => $this->serviceContacts['disabled']->id(),
-      ]],
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['disabled']->id()],
+      ],
     ]);
     $this->notifier->enqueue($node2, 'review');
     $this->assertEquals(0, $queue->numberOfItems());
@@ -125,9 +125,9 @@ class WorkflowNotificationTest extends KernelTestBase {
     $node3 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
-      'localgov_service_contacts' =>  [[
-        'target_id' => $this->serviceContacts['enabled']->id(),
-      ]],
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['enabled']->id()],
+      ],
     ]);
     $this->notifier->enqueue($node1, 'review');
     $this->notifier->enqueue($node3, 'review');
@@ -150,11 +150,10 @@ class WorkflowNotificationTest extends KernelTestBase {
     $node5 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
-      'localgov_service_contacts' =>  [[
-        'target_id' => $this->serviceContacts['enabled']->id(),
-      ], [
-        'target_id' => $this->serviceContacts['another']->id(),
-      ]],
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['enabled']->id()],
+        ['target_id' => $this->serviceContacts['another']->id()],
+      ],
     ]);
     $this->notifier->enqueue($node5, 'published');
     $this->assertEquals(2, $queue->numberOfItems());
@@ -163,9 +162,9 @@ class WorkflowNotificationTest extends KernelTestBase {
     $node6 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
-      'localgov_service_contacts' =>  [[
-        'target_id' => $this->serviceContacts['enabled']->id(),
-      ]],
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['enabled']->id()],
+      ],
     ]);
     $this->notifier->enqueue($node6, 'published');
     $this->assertEquals(3, $queue->numberOfItems());

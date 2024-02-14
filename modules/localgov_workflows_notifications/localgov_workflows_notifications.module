@@ -13,9 +13,6 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_entity_base_field_info().
  */
-/**
- * Implements hook_entity_base_field_info().
- */
 function localgov_workflows_notifications_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
 
