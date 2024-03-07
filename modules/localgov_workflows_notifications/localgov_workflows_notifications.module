@@ -44,8 +44,18 @@ function localgov_workflows_notifications_entity_base_field_info(EntityTypeInter
  */
 function localgov_workflows_notifications_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
+  if (!isset($form['localgov_service_contacts'])) {
+    return;
+  }
+
+  // Hide service contacts widget if user doesn't have permission.
+  if (!\Drupal::currentUser()->hasPermission('view localgov_service_contact')) {
+    $form['localgov_service_contacts']['#access'] = FALSE;
+    return;
+  }
+
   // Add service contacts field advanced group on node edit forms.
-  if (isset($form['localgov_service_contacts']) && isset($form['advanced'])) {
+  if (isset($form['advanced'])) {
     $form['service_contacts'] = [
       '#type' => 'details',
       '#title' => t('Service contacts'),
@@ -65,9 +75,7 @@ function localgov_workflows_notifications_form_alter(&$form, FormStateInterface 
   }
 
   // Add our custom validation handler.
-  if (isset($form['localgov_service_contacts'])) {
-    $form['#validate'][] = 'localgov_workflows_notifications_node_form_validate';
-  }
+  $form['#validate'][] = 'localgov_workflows_notifications_node_form_validate';
 }
 
 /**
