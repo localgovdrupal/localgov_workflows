@@ -59,7 +59,7 @@ function localgov_workflows_notifications_form_alter(&$form, FormStateInterface 
     $form['service_contacts'] = [
       '#type' => 'details',
       '#title' => t('Service contacts'),
-      '#description' => t('Search for a service contact by name or email.'),
+      '#description' => t('Associate service contacts with this content by searching by name or email.'),
       '#group' => 'advanced',
       '#open' => TRUE,
       '#weight' => -4,
