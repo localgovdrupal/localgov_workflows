@@ -1,6 +1,5 @@
 administer localgov_service_contact:
   title: 'Administer service contacts'
-  restrict access: true
 view localgov_service_contact:
   title: 'View service contact'
 edit localgov_service_contact:

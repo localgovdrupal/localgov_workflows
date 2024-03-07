@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\localgov_roles\RolesHelper;
 
 /**
  * Implements hook_entity_base_field_info().
@@ -149,4 +150,27 @@ function localgov_workflows_notifications_cron(): void {
 
     \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $request_time);
   }
+}
+
+/**
+ * Implements hook_localgov_roles_default().
+ */
+function localgov_workflows_notifications_localgov_roles_default(): array {
+
+  // Service contact permissions.
+  return [
+    RolesHelper::EDITOR_ROLE => [
+      'administer localgov_service_contact',
+      'create localgov_service_contact',
+      'delete localgov_service_contact',
+      'edit localgov_service_contact',
+      'view localgov_service_contact',
+    ],
+    RolesHelper::AUTHOR_ROLE => [
+      'view localgov_service_contact',
+    ],
+    RolesHelper::CONTRIBUTOR_ROLE => [
+      'view localgov_service_contact',
+    ],
+  ];
 }
