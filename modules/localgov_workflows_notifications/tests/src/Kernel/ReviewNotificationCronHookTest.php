@@ -98,6 +98,7 @@ class ReviewNotificationCronHookTest extends KernelTestBase {
     ]);
 
     $this->queue = \Drupal::queue(EmailNotificationQueueWorker::QUEUE_NAME);
+    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', 0);
   }
 
   /**
