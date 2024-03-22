@@ -18,9 +18,12 @@ function localgov_workflows_notifications_install($is_syncing) {
   ];
   foreach ($conflicts as $module => $title) {
     if (\Drupal::moduleHandler()->moduleExists($module)) {
-      $message = 'The @title module is installed and this is incompatible with the Symfony Mailer module which has just been enabled. Please disable the conflicting module and review the sites email settings.';
-      \Drupal::logger('localgov_workflows_notifications')->warning($message, ['@title' => $title]);
-      \Drupal::messenger()->addWarning(t($message, ['@title' => $title])->render());
+      \Drupal::logger('localgov_workflows_notifications')->warning(
+        'The @title module is installed and this is incompatible with the Symfony Mailer module which has just been enabled. Please disable the conflicting module and review the sites email settings.',
+        ['@title' => $title]);
+      \Drupal::messenger()->addWarning(t(
+        'The @title module is installed and this is incompatible with the Symfony Mailer module which has just been enabled. Please disable the conflicting module and review the sites email settings.',
+        ['@title' => $title]));
     }
   }
 }
