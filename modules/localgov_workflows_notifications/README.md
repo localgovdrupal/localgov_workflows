@@ -4,6 +4,18 @@ This module is designed to send notifications to service contacts when content m
 states change. It currently only implements email notifications when content passes its needs
 review date, but it should be easy to implement email notifications on other events.
 
+## Warning
+
+This module enables the [Symfony Mailer](https://www.drupal.org/project/symfony_mailer/)
+module which will take over email sending for the site. It's important to test the sites
+email settings after install to ensure they work for your environment. This is particularly
+important if the site already uses a contrib module to handle email sending as the Symfony
+Mailer module will take over from this. Modules that can cause issues:
+
+* [Mail System](https://www.drupal.org/project/mailsystem)
+* [Sendgrid Integration](https://www.drupal.org/project/sendgrid_integration)
+* [SMTP Authentication Support](https://www.drupal.org/project/smtp)
+
 ## Setup
 
 The server must be able to send emails and cron must be running frequently.
