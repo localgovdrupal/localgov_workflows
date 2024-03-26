@@ -1,0 +1,4 @@
+services:
+  localgov_workflows_notifications.notifier:
+    class: Drupal\localgov_workflows_notifications\WorkflowNotification
+    arguments: ['@queue']

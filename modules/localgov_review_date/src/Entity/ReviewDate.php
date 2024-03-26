@@ -154,7 +154,7 @@ class ReviewDate extends ContentEntityBase implements ReviewDateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEntity(): EntityInterface {
+  public function getEntity(): EntityInterface|NULL {
     return $this->get('entity')->entity;
   }
 
