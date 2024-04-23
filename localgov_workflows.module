@@ -30,6 +30,8 @@ function localgov_workflows_modules_installed($modules, $is_syncing) {
       ->getStorage('view')
       ->load('moderated_content');
     if ($moderated_content_view) {
+
+      // Fix filters to match editorial workflow.
       $display = $moderated_content_view->get('display');
       $filters = $display['default']['display_options']['filters'];
       $filters['moderation_state']['value'] = [
@@ -41,6 +43,10 @@ function localgov_workflows_modules_installed($modules, $is_syncing) {
         'localgov_editorial-published' => 'localgov_editorial-published',
       ];
       $display['default']['display_options']['filters'] = $filters;
+
+      // Update no results text.
+      $display['default']['display_options']['empty']['area_text_custom']['content'] = 'No unpublished content available. Pages in Draft, Review and Archived states appear here.';
+
       $moderated_content_view->set('display', $display);
       $moderated_content_view->save();
     }
@@ -136,12 +142,100 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
     }
   }
 
+  // Rename 'Scheduled transitions' tab to 'Scheduling'.
+  if (isset($data['tabs'][0]['entity.scheduled_transition.collection'])) {
+    $data['tabs'][0]['entity.scheduled_transition.collection']['#link']['title'] = t('Scheduling');
+  }
+  if (isset($data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'])) {
+    $title = $data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'];
+    $arguments = $title->getArguments();
+    $arguments['@title'] = 'Scheduling';
+    $data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'] = t($title->getUntranslatedString(), $arguments); // phpcs:ignore.
+  }
+
+  // Rename 'Moderated content' tab to 'Unpublished'.
+  if (isset($data['tabs'][1]['content_moderation.workflows:content_moderation.moderated_content'])) {
+    $data['tabs'][1]['content_moderation.workflows:content_moderation.moderated_content']['#link']['title'] = t('Unpublished');
+    $data['tabs'][1]['content_moderation.workflows:content_moderation.moderated_content']['#weight'] = 10;
+  }
+
   // Add cache dependency on workflow.
   $cacheability->addCacheTags(['config:workflow_list']);
 }
 
 /**
- * Imlements hook_form_BASE_FORM_ID_alter().
+ * Implements hook_menu_local_actions_alter().
+ */
+function localgov_workflows_menu_local_actions_alter(&$local_actions) {
+
+  // Rename 'Add scheduled transitions' action to 'Add schedule'.
+  foreach ($local_actions as $key => $action) {
+    if (preg_match('/^scheduled_transitions\.actions:.*\.add_scheduled_transition$/', $key)) {
+      $local_actions[$key]['title'] = t('Add schedule');
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function localgov_workflows_preprocess_html(&$variables) {
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'entity.scheduled_transition.collection') {
+    $variables['head_title']['title'] = t('Scheduling');
+  }
+  elseif ($route_name === 'entity.scheduled_transition.reschedule_form') {
+    $variables['head_title']['title'] = t('Reschedule');
+  }
+  elseif ($route_name === 'content_moderation.admin_moderated_content') {
+    $variables['head_title']['title'] = t('Unpublished');
+  }
+}
+
+/**
+ * Implements hook_preprocess_page_title().
+ */
+function localgov_workflows_preprocess_page_title(&$variables) {
+
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === 'entity.scheduled_transition.collection') {
+    $variables['title'] = t('Scheduling');
+  }
+  elseif ($route_name === 'content_moderation.admin_moderated_content') {
+    $variables['title'] = t('Unpublished');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function localgov_workflows_form_alter(&$form, FormStateInterface $form_state, string $form_id) {
+
+  // Rename 'Scheduled transition' form items to 'Schedule'.
+  if (str_ends_with($form_id, 'scheduled_transitions_add_form_form')) {
+    $form['actions']['submit']['#value'] = t('Schedule');
+  }
+
+  // Rename 'Reschedule transition' form items to 'Reschedule'.
+  if ($form_id == 'scheduled_transition_reschedule_form') {
+    $form['actions']['submit']['#value'] = t('Reschedule');
+  }
+}
+
+/**
+ * Implements hook_menu_discovered_alter().
+ */
+function localgov_workflows_menu_links_discovered_alter(array &$links) {
+
+  // Rename 'Scheduled transitions' menu item to 'Scheduling'.
+  if (isset($links['entity.scheduled_transition.collection'])) {
+    $links['entity.scheduled_transition.collection']['title'] = t('Scheduling');
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
  */
 function localgov_workflows_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
   return \Drupal::classResolver(RequireLogMessage::class)
