@@ -50,7 +50,7 @@ class ApprovalsDashboardTest extends BrowserTestBase {
     $workflow->save();
     $this->drupalGet('admin/content');
     $this->assertSession()->responseContains('Approve');
-    $this->assertSession()->responseContains('Moderated content');
+    $this->assertSession()->responseContains('Unpublished');
   }
 
   /**
