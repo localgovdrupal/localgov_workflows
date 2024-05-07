@@ -26,4 +26,20 @@ function localgov_workflows_notifications_install($is_syncing) {
         ['@title' => $title]));
     }
   }
+
+  // Initialise last_email_run state variable.
+  $request_time = \Drupal::time()->getRequestTime();
+  \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $request_time);
+}
+
+/**
+ * Initialise last_email_run state variable.
+ */
+function localgov_workflows_notifications_update_10001(&$sandbox) {
+
+  $last_run = \Drupal::state()->get('localgov_workflows_notifications.last_email_run');
+  if (is_null($last_run)) {
+    $request_time = \Drupal::time()->getRequestTime();
+    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $request_time);
+  }
 }
