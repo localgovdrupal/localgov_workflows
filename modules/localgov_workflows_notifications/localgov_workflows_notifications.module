@@ -130,12 +130,12 @@ function localgov_workflows_notifications_cron(): void {
   }
 
   // Enqueue email notification for content past its needs review date.
-  $request_time = \Drupal::time()->getRequestTime();
-  $last_run = \Drupal::state()->get('localgov_workflows_notifications.last_email_run', $request_time);
-  $next_run = $last_run + 86400 * $settings->get('email_frequency');
-  if ($request_time >= $next_run) {
+  $notification_timer = \Drupal::service('localgov_workflows_notifications.notification_timer');
+  if ($notification_timer->trigger()) {
 
     // Get review date IDs that need have passed their review date.
+    $request_time = \Drupal::time()->getRequestTime();
+    $last_run = $notification_timer->getLastRun();
     $storage = \Drupal::entityTypeManager()->getStorage('review_date');
     $review_date_ids = $storage->getQuery()
       ->condition('active', 1)
@@ -156,7 +156,7 @@ function localgov_workflows_notifications_cron(): void {
       }
     }
 
-    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $request_time);
+    $notification_timer->update();
   }
 }
 
