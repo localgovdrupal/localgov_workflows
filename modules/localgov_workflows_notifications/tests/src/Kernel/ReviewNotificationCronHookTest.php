@@ -5,6 +5,7 @@ namespace Drupal\Tests\localgov_workflows_notifications\Kernel;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact;
+use Drupal\localgov_workflows_notifications\NotificationTimerInterface;
 use Drupal\localgov_workflows_notifications\Plugin\QueueWorker\EmailNotificationQueueWorker;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -98,7 +99,7 @@ class ReviewNotificationCronHookTest extends KernelTestBase {
     ]);
 
     $this->queue = \Drupal::queue(EmailNotificationQueueWorker::QUEUE_NAME);
-    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', 0);
+    \Drupal::state()->set(NotificationTimerInterface::LAST_RUN, 0);
   }
 
   /**
@@ -125,7 +126,7 @@ class ReviewNotificationCronHookTest extends KernelTestBase {
     // Check notification queue after cron hook with state config.
     $request_time = \Drupal::time()->getRequestTime();
     $reviewed = $request_time - 3600;
-    \Drupal::state()->set('localgov_workflows_notifications.last_email_run', $reviewed - 86400);
+    \Drupal::state()->set(NotificationTimerInterface::LAST_RUN, $reviewed - 86400);
     $review_date = \Drupal::entityTypeManager()->getStorage('review_date')->create([
       'entity' => [
         ['target_id' => $this->node->id()],
