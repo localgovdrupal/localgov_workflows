@@ -152,6 +152,10 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
     $arguments['@title'] = 'Scheduling';
     $data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'] = t($title->getUntranslatedString(), $arguments); // phpcs:ignore.
   }
+    // Alter "Scheduled transitions" weight.
+    if (isset($data['tabs'][0]['entity.scheduled_transition.collection'])) {
+        $data['tabs'][0]['entity.scheduled_transition.collection']['#weight'] = 70;
+    }
 
   // Rename 'Moderated content' tab to 'Unpublished'.
   if (isset($data['tabs'][1]['content_moderation.workflows:content_moderation.moderated_content'])) {
