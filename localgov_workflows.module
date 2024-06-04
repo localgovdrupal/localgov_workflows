@@ -145,7 +145,7 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
   // Rename 'Scheduled transitions' tab to 'Scheduling' and increase its weight.
   if (isset($data['tabs'][0]['entity.scheduled_transition.collection'])) {
     $data['tabs'][0]['entity.scheduled_transition.collection']['#link']['title'] = t('Scheduling');
-      $data['tabs'][0]['entity.scheduled_transition.collection']['#weight'] = 70;
+    $data['tabs'][0]['entity.scheduled_transition.collection']['#weight'] = 70;
   }
   if (isset($data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'])) {
     $title = $data['tabs'][0]['scheduled_transitions.tasks:node.scheduled_transitions']['#link']['title'];
