@@ -15,4 +15,4 @@ entity.localgov_service_contact.collection:
   title: 'Service contacts'
   route_name: entity.localgov_service_contact.collection
   base_route: system.admin_content
-  weight: 10
+  weight: 80
