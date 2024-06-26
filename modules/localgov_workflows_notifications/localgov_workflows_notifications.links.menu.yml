@@ -4,6 +4,12 @@ entity.localgov_service_contact.collection:
   route_name: entity.localgov_service_contact.collection
   parent: system.admin_content
 
+localgov_workflows_notifications.content_by_owner:
+  title: 'Content by owner'
+  description: 'Table of contents, by owner.'
+  route_name: view.localgov_content_by_owner.page_1
+  parent: system.admin_content
+
 localgov_workflows_notifications.settings:
   title: 'LocalGov workflow notifications'
   description: 'Administer LocalGov workflow notifications'
