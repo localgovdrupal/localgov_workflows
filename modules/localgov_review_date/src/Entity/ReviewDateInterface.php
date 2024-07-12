@@ -73,10 +73,10 @@ interface ReviewDateInterface extends ContentEntityInterface {
   /**
    * Gets the entity that has been reviewed.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityInterface|null
    *   The content entity that has been reviewed.
    */
-  public function getEntity(): EntityInterface;
+  public function getEntity(): EntityInterface|NULL;
 
   /**
    * Gets the langcode for the entity review date.

@@ -9,6 +9,7 @@
         "drupal/diff": "^1.0",
         "drupal/responsive_preview": "^2.0",
         "drupal/scheduled_transitions": "^2.1",
+        "drupal/symfony_mailer": "^1.4",
         "localgovdrupal/localgov_core": "^2.12"
     }
 }

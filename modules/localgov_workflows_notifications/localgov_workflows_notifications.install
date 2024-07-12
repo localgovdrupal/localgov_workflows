@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Install functions for the LocalGov Review Notifications module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function localgov_workflows_notifications_install($is_syncing) {
+
+  // Display a message if a conflicting mail module is enabled.
+  $conflicts = [
+    'sendgrid' => 'Sendgrid',
+    'smtp' => 'SMTP',
+    'mailsystem' => 'Mail System',
+  ];
+  foreach ($conflicts as $module => $title) {
+    if (\Drupal::moduleHandler()->moduleExists($module)) {
+      \Drupal::logger('localgov_workflows_notifications')->warning(
+        'The @title module is installed and this is incompatible with the Symfony Mailer module which has just been enabled. Please disable the conflicting module and review the sites email settings.',
+        ['@title' => $title]);
+      \Drupal::messenger()->addWarning(t(
+        'The @title module is installed and this is incompatible with the Symfony Mailer module which has just been enabled. Please disable the conflicting module and review the sites email settings.',
+        ['@title' => $title]));
+    }
+  }
+
+  // Initialise notification timer.
+  \Drupal::service('localgov_workflows_notifications.notification_timer')->update();
+}
+
+/**
+ * Update notification timer if not already.
+ */
+function localgov_workflows_notifications_update_10001(&$sandbox) {
+  $timer = \Drupal::service('localgov_workflows_notifications.notification_timer');
+  if (is_null($timer->getLastRun())) {
+    $timer->update();
+  }
+}
