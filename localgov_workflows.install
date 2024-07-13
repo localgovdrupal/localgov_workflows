@@ -59,7 +59,7 @@ function localgov_workflows_install($is_syncing) {
   $scheduled_transitions_config = \Drupal::service('config.factory')->getEditable('scheduled_transitions.settings');
   $bundles = $scheduled_transitions_config->get('bundles') ?? [];
   foreach ($node_types as $bundle => $node_type) {
-    if (empty($bundles) || !in_array($bundle, array_column($bundles, 'bundle'))) {
+    if (empty($bundles) || !in_array($bundle, array_column($bundles, 'bundle'), TRUE)) {
       $bundles[] = [
         'entity_type' => 'node',
         'bundle' => $bundle,
@@ -123,7 +123,7 @@ function localgov_workflows_update_9002() {
   $dependencies = $config->get('dependencies');
 
   $updated = FALSE;
-  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'])) {
+  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'], TRUE)) {
     $dependencies['enforced']['module'][] = 'localgov_workflows';
     $updated = TRUE;
   }
