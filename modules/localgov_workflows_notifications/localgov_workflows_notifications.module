@@ -88,11 +88,11 @@ function localgov_workflows_notifications_node_form_validate($form, &$form_state
   $values = [];
   foreach ($localgov_service_contacts as $value) {
     if (is_array($value) && !empty($value['target_id'])) {
-      if (in_array($value['target_id'], $values, TRUE)) {
+      if (in_array((string) $value['target_id'], $values, TRUE)) {
         $form_state->setError($form['localgov_service_contacts'], t('Service contacts must be unique.'));
         return;
       }
-      $values[] = $value['target_id'];
+      $values[] = (string) $value['target_id'];
     }
   }
 }
