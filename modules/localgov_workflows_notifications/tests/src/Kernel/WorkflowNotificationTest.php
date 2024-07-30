@@ -58,7 +58,7 @@ class WorkflowNotificationTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');

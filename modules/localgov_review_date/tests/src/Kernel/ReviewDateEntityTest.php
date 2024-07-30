@@ -53,7 +53,7 @@ class ReviewDateEntityTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('node');

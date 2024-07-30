@@ -42,7 +42,7 @@ class WorkflowsScheduledTransitionsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   public function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('node');
