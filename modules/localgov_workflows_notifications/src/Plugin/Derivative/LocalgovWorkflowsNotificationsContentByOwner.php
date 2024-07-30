@@ -51,11 +51,11 @@ class LocalgovWorkflowsNotificationsContentByOwner extends DeriverBase implement
     $view = Views::getView('localgov_content_by_owner');
     if ($view instanceof ViewExecutable) {
       $links['localgov_workflows_notifications_content_by_owner'] = [
-          'title' => $this->t('Content by owner'),
-          'description' => $this->t('Table of contents, by owner.'),
-          'route_name' => 'view.localgov_content_by_owner.page_1',
-          'parent' => 'system.admin_content',
-        ] + $base_plugin_definition;
+        'title' => $this->t('Content by owner'),
+        'description' => $this->t('Table of contents, by owner.'),
+        'route_name' => 'view.localgov_content_by_owner.page_1',
+        'parent' => 'system.admin_content',
+      ] + $base_plugin_definition;
     }
 
     return $links;
