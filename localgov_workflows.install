@@ -12,7 +12,6 @@ use Drupal\localgov_roles\RolesHelper;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\user\Entity\Role;
 use Drupal\workflows\Entity\Workflow;
-use PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprFalseNode;
 
 /**
  * Implements hook_install().
@@ -28,7 +27,7 @@ function localgov_workflows_install($is_syncing) {
   $editorial = Workflow::load('localgov_editorial');
   if (!$editorial) {
     $config_key = 'workflows.workflow.localgov_editorial';
-    $editorial_config = ConstExprFalseNode;
+    $editorial_config = FALSE;
     if ($is_syncing) {
       // If syncing config try to load the workflow from exported config.
       $config_source = new FileStorage(Settings::get('config_sync_directory'));
