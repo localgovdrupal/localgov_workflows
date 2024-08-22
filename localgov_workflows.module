@@ -105,7 +105,7 @@ function localgov_workflows_node_type_insert(NodeTypeInterface $node_type) {
   if (strpos($node_type->id(), 'localgov_') === 0) {
     $types = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
     if (empty($types['node']['workflow'])) {
-      // Workflow may not exist during site install.
+      // The localgov_editorial workflow may not exist during site install.
       if ($editorial = Workflow::load('localgov_editorial')) {
         $type = $editorial->getTypePlugin();
         $type->addEntityTypeAndBundle('node', $node_type->id());
