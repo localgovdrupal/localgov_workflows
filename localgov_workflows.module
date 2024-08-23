@@ -19,7 +19,7 @@ use Drupal\workflows\Entity\Workflow;
 function localgov_workflows_modules_installed($modules, $is_syncing) {
 
   // Fix the core moderated content view.
-  if (in_array('localgov_workflows', $modules) && !$is_syncing) {
+  if (in_array('localgov_workflows', $modules, TRUE) && !$is_syncing) {
 
     // Don't change things if the core editorial workflow is enabled.
     if (!is_null(\Drupal::entityTypeManager()->getStorage('workflow')->load('editorial'))) {
@@ -105,10 +105,12 @@ function localgov_workflows_node_type_insert(NodeTypeInterface $node_type) {
   if (strpos($node_type->id(), 'localgov_') === 0) {
     $types = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
     if (empty($types['node']['workflow'])) {
-      $editorial = Workflow::load('localgov_editorial');
-      $type = $editorial->getTypePlugin();
-      $type->addEntityTypeAndBundle('node', $node_type->id());
-      $editorial->save();
+      // The localgov_editorial workflow may not exist during site install.
+      if ($editorial = Workflow::load('localgov_editorial')) {
+        $type = $editorial->getTypePlugin();
+        $type->addEntityTypeAndBundle('node', $node_type->id());
+        $editorial->save();
+      }
     }
   }
 }
@@ -125,11 +127,11 @@ function localgov_workflows_menu_local_tasks_alter(&$data, $route_name, Refinabl
     'system.admin_content',
     'view.localgov_approvals_dashboard.approvals_dashboard',
   ];
-  if (in_array($route_name, $admin_content_routes)) {
+  if (in_array($route_name, $admin_content_routes, TRUE)) {
 
     // Check if there are more workflows enabled than localgov_editorial.
     $workflows = \Drupal::entityQuery('workflow')->accessCheck(TRUE)->execute();
-    if (in_array('localgov_editorial', $workflows) && count($workflows) == 1) {
+    if (in_array('localgov_editorial', $workflows, TRUE) && count($workflows) == 1) {
 
       // Hide the moderated content tab.
       for ($i = 0; $i < count($data['tabs']); $i++) {

@@ -7,7 +7,6 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\FileStorage;
-use Drupal\Core\Site\Settings;
 use Drupal\localgov_roles\RolesHelper;
 use Drupal\scheduled_transitions\Form\ScheduledTransitionsSettingsForm;
 use Drupal\user\Entity\Role;
@@ -18,21 +17,18 @@ use Drupal\workflows\Entity\Workflow;
  */
 function localgov_workflows_install($is_syncing) {
 
+  if ($is_syncing) {
+    // If syncing config, don't run the install process.
+    return;
+  }
+
   // Configure workflow for localgov_ node bundles with no other workflow.
   $editorial = Workflow::load('localgov_editorial');
   if (!$editorial) {
     $config_key = 'workflows.workflow.localgov_editorial';
-    if ($is_syncing) {
-      // If syncing config try to load the workflow from exported config.
-      $config_source = new FileStorage(Settings::get('config_sync_directory'));
-      $editorial_config = $config_source->read($config_key);
-    }
-    if (!$is_syncing || !$editorial_config) {
-      // If workflow doesn't already exist load it from this module.
-      $config_file_path = \Drupal::service('extension.path.resolver')->getPath('module', 'localgov_workflows') . '/config/install';
-      $config_source = new FileStorage($config_file_path);
-      $editorial_config = $config_source->read($config_key);
-    }
+    $config_file_path = \Drupal::service('extension.path.resolver')->getPath('module', 'localgov_workflows') . '/config/install';
+    $config_source = new FileStorage($config_file_path);
+    $editorial_config = $config_source->read($config_key);
     \Drupal::entityTypeManager()->getStorage('workflow')
       ->create($editorial_config)
       ->save();
@@ -43,8 +39,9 @@ function localgov_workflows_install($is_syncing) {
   $node_types = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
   $changed = FALSE;
   foreach ($node_types as $type_name => $node_type) {
+    // For content types named localgov_* that don't have a workflow, add the
+    // localgov_editorial workflow.
     if (strpos($type_name, 'localgov_') === 0 && empty($node_type['workflow'])) {
-
       // Add workflow.
       $workflow_type->addEntityTypeAndBundle('node', $type_name);
       $changed = TRUE;
@@ -59,7 +56,7 @@ function localgov_workflows_install($is_syncing) {
   $scheduled_transitions_config = \Drupal::service('config.factory')->getEditable('scheduled_transitions.settings');
   $bundles = $scheduled_transitions_config->get('bundles') ?? [];
   foreach ($node_types as $bundle => $node_type) {
-    if (empty($bundles) || !in_array($bundle, array_column($bundles, 'bundle'))) {
+    if (empty($bundles) || !in_array($bundle, array_column($bundles, 'bundle'), TRUE)) {
       $bundles[] = [
         'entity_type' => 'node',
         'bundle' => $bundle,
@@ -123,7 +120,7 @@ function localgov_workflows_update_9002() {
   $dependencies = $config->get('dependencies');
 
   $updated = FALSE;
-  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'])) {
+  if (isset($dependencies['enforced']['module']) && !in_array('localgov_workflows', $dependencies['enforced']['module'], TRUE)) {
     $dependencies['enforced']['module'][] = 'localgov_workflows';
     $updated = TRUE;
   }

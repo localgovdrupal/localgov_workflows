@@ -3,7 +3,7 @@
 namespace Drupal\Tests\localgov_workflows\Functional;
 
 use Drupal\localgov_roles\RolesHelper;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
 
@@ -173,7 +173,7 @@ class WorkflowsAccessTest extends BrowserTestBase {
    * @param string $state
    *   Moderation state.
    *
-   * @returns \Drupal\node\Entity\Node
+   * @returns \Drupal\node\NodeInterface
    */
   protected function createNodeWithState($state) {
     $title = $this->randomMachineName(12);
@@ -193,14 +193,14 @@ class WorkflowsAccessTest extends BrowserTestBase {
   /**
    * Update and test node with given moderation state.
    *
-   * @param \Drupal\node\Entity\Node $node
+   * @param \Drupal\node\NodeInterface $node
    *   Node to update.
    * @param string $state
    *   Moderation state.
    *
-   * @returns \Drupal\node\Entity\Node
+   * @returns \Drupal\node\NodeInterface
    */
-  protected function updateState(Node $node, string $state) {
+  protected function updateState(NodeInterface $node, string $state) {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm([
       'moderation_state[0][state]' => $state,
