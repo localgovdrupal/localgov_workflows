@@ -17,17 +17,25 @@ class LocalgovWorkflowsNotificationsContentByOwner extends DeriverBase implement
 
   use StringTranslationTrait;
 
+    /**
+     * The base plugin ID.
+     *
+     * @var string
+     */
+    protected string $basePluginId;
+
   /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * {@inheritdoc}
    */
   public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager) {
+    $this->basePluginId = $base_plugin_id;
     $this->entityTypeManager = $entity_type_manager;
   }
 
