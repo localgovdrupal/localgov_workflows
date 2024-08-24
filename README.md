@@ -1,6 +1,6 @@
 # LocalGov Drupal Workflows
 
-Default editorial workflow for LocalGov Drupal content.
+Default editorial workflow  for LocalGov Drupal content.
 
 Provides a Drupal content moderation workflow, a content approvals dashboard, content scheduling and content preview.
 
