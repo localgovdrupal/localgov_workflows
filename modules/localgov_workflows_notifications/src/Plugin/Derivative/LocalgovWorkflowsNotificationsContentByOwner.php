@@ -17,12 +17,12 @@ class LocalgovWorkflowsNotificationsContentByOwner extends DeriverBase implement
 
   use StringTranslationTrait;
 
-    /**
-     * The base plugin ID.
-     *
-     * @var string
-     */
-    protected string $basePluginId;
+  /**
+   * The base plugin ID.
+   *
+   * @var string
+   */
+  protected string $basePluginId;
 
   /**
    * The entity type manager.
