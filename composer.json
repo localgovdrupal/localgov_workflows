@@ -6,6 +6,7 @@
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "require": {
+        "drupal/core": "^10.2",
         "drupal/diff": "^1.0",
         "drupal/responsive_preview": "^2.0",
         "drupal/scheduled_transitions": "^2.1",
