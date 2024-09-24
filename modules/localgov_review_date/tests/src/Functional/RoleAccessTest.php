@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\localgov_review_date\Functional;
 
-use Drupal\localgov_roles\RolesHelper;
-use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\localgov_roles\RolesHelper;
+use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
