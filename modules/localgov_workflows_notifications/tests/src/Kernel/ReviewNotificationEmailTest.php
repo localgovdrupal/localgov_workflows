@@ -4,11 +4,11 @@ namespace Drupal\Tests\localgov_workflows_notifications\Kernel;
 
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact;
 use Drupal\localgov_workflows_notifications\Plugin\QueueWorker\EmailNotificationQueueWorker;
 use Drupal\symfony_mailer_test\MailerTestTrait;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * Test the review notification email.
