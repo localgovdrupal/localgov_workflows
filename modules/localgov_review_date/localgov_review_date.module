@@ -61,39 +61,41 @@ function localgov_review_date_node_update(NodeInterface $node) {
 
   // Compare moderation state between original and saved node.
   $original = $node->original;
-  $previous_state = $original->get('moderation_state')->getValue()[0]['value'];
-  $new_state = $node->get('moderation_state')->getValue()[0]['value'];
+  if ($original->hasField('moderation_state') && !$original->get('moderation_state')->isEmpty() && $original->get('moderation_state')->value) {
+    $previous_state = $original->get('moderation_state')->getValue()[0]['value'];
+    $new_state = $node->get('moderation_state')->getValue()[0]['value'];
 
-  // If node is being moved into the archvied state,
-  // Find any scheduled transitions to review and delete them.
-  if ($previous_state != $new_state && $new_state == 'archived') {
-    $st_storage = \Drupal::entityTypeManager()->getStorage('scheduled_transition');
-    $st_ids = $st_storage->getQuery()
-      ->condition('workflow', 'localgov_editorial')
-      ->condition('entity__target_type', 'node')
-      ->condition('entity__target_id', $node->id())
-      ->accessCheck(FALSE)
-      ->execute();
-    $scheduled_transitions = $st_storage->loadMultiple($st_ids);
-    foreach ($scheduled_transitions as $scheduled_transition) {
-      // Using condition('moderation_state', 'review') above does not bring
-      // in any results, so do an if check here if the transition is in review
-      // and delete it.
-      if ($scheduled_transition->get('moderation_state')->value == 'review') {
-        $scheduled_transition->delete();
+    // If node is being moved into the archvied state,
+    // Find any scheduled transitions to review and delete them.
+    if ($previous_state != $new_state && $new_state == 'archived') {
+      $st_storage = \Drupal::entityTypeManager()->getStorage('scheduled_transition');
+      $st_ids = $st_storage->getQuery()
+        ->condition('workflow', 'localgov_editorial')
+        ->condition('entity__target_type', 'node')
+        ->condition('entity__target_id', $node->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      $scheduled_transitions = $st_storage->loadMultiple($st_ids);
+      foreach ($scheduled_transitions as $scheduled_transition) {
+        // Using condition('moderation_state', 'review') above does not bring
+        // in any results, so do an if check here if the transition is in review
+        // and delete it.
+        if ($scheduled_transition->get('moderation_state')->value == 'review') {
+          $scheduled_transition->delete();
+        }
       }
-    }
 
-    // Also delete active review entities of this node.
-    $review_storage = \Drupal::entityTypeManager()->getStorage('review_date');
-    $review_ids = $review_storage->getQuery()
-      ->condition('entity', $node->id())
-      ->condition('active', 1)
-      ->accessCheck(FALSE)
-      ->execute();
-    $review_entities = $review_storage->loadMultiple($review_ids);
-    foreach ($review_entities as $review) {
-      $review->delete();
+      // Also delete active review entities of this node.
+      $review_storage = \Drupal::entityTypeManager()->getStorage('review_date');
+      $review_ids = $review_storage->getQuery()
+        ->condition('entity', $node->id())
+        ->condition('active', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      $review_entities = $review_storage->loadMultiple($review_ids);
+      foreach ($review_entities as $review) {
+        $review->delete();
+      }
     }
   }
 }
