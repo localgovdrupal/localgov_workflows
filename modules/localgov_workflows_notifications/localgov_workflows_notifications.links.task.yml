@@ -15,4 +15,7 @@ entity.localgov_service_contact.collection:
   title: 'Service contacts'
   route_name: entity.localgov_service_contact.collection
   base_route: system.admin_content
-  weight: 80
+  weight: 10
+localgov_workflows_notifications.content_by_owner:
+  deriver: 'Drupal\localgov_workflows_notifications\Plugin\Derivative\LocalgovWorkflowsNotificationsLocalTasks'
+  weight: 11
