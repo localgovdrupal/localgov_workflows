@@ -32,7 +32,7 @@ class WorkflowNotificationEmailBuilder extends EmailBuilderBase {
    * @param \Drupal\Core\Entity\ContentEntityInterface[] $entities
    *   Entities to notify about.
    */
-  public function createParams(EmailInterface $email, LocalgovServiceContactInterface $service_contact = NULL, array $entities = []): void {
+  public function createParams(EmailInterface $email, ?LocalgovServiceContactInterface $service_contact = NULL, array $entities = []): void {
 
     $email->setParam('entities', $entities);
     $email->setParam('service_contact', $service_contact);

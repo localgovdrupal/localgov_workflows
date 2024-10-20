@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\localgov_workflows_notifications\Functional;
 
+use Drupal\Tests\BrowserTestBase;
 use Drupal\localgov_workflows_notifications\Entity\LocalgovServiceContact;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test service contact widget.

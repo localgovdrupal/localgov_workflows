@@ -3,8 +3,8 @@
 namespace Drupal\Tests\localgov_workflows_notifications\Functional;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\localgov_workflows_notifications\NotificationTimerInterface;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\localgov_workflows_notifications\NotificationTimerInterface;
 
 /**
  * Test settings form.

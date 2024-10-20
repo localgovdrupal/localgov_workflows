@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\localgov_review_date\Functional;
 
+use Drupal\Tests\BrowserTestBase;
 use Drupal\localgov_review_date\Entity\ReviewDate;
 use Drupal\scheduled_transitions\Entity\ScheduledTransition;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\workflows\Entity\Workflow;
 
 /**
