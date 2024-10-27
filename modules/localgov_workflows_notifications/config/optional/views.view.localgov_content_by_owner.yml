@@ -1,8 +1,6 @@
 langcode: en
 status: true
 dependencies:
-  config:
-    - system.menu.admin
   module:
     - localgov_workflows_notifications
     - node
@@ -573,15 +571,6 @@ display:
     display_options:
       display_extenders: {  }
       path: admin/content/localgov-service-contact/content-by-owner
-      menu:
-        type: normal
-        title: Content
-        description: ''
-        weight: 0
-        expanded: false
-        menu_name: admin
-        parent: entity.localgov_service_contact.collection
-        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
