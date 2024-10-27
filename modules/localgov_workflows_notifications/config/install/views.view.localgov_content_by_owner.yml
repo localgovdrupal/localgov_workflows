@@ -1,6 +1,8 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.admin
   module:
     - localgov_workflows_notifications
     - node
@@ -410,6 +412,7 @@ display:
         type: mini
         options:
           offset: 0
+          pagination_heading_level: h4
           items_per_page: 50
           total_pages: null
           id: 0
@@ -569,7 +572,16 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/localgov-content-by-owner
+      path: admin/content/localgov-service-contact/content-by-owner
+      menu:
+        type: normal
+        title: Content
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: admin
+        parent: entity.localgov_service_contact.collection
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
