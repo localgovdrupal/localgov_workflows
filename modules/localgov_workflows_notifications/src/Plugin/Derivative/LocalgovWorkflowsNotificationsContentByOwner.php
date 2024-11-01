@@ -62,7 +62,7 @@ class LocalgovWorkflowsNotificationsContentByOwner extends DeriverBase implement
         'title' => $this->t('Content by owner'),
         'description' => $this->t('Table of contents, by owner.'),
         'route_name' => 'view.localgov_content_by_owner.page_1',
-        'parent' => 'system.admin_content',
+        'parent' => 'entity.localgov_service_contact.collection',
       ] + $base_plugin_definition;
     }
 

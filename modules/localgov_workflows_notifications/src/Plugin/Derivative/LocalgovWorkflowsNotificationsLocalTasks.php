@@ -28,16 +28,22 @@ class LocalgovWorkflowsNotificationsLocalTasks extends DeriverBase implements Co
    */
   public function getDerivativeDefinitions($base_plugin_definition): array {
     $this->derivatives = [];
-
     // Only create the local task if the corresponding View is present.
     $view = Views::getView('localgov_content_by_owner');
     if ($view instanceof ViewExecutable) {
-      $this->derivatives['localgov_workflows_notifications.content_by_owner'] = $base_plugin_definition;
-      $this->derivatives['localgov_workflows_notifications.content_by_owner']['route_name'] = 'view.localgov_content_by_owner.page_1';
-      $this->derivatives['localgov_workflows_notifications.content_by_owner']['base_route'] = 'system.admin_content';
-      $this->derivatives['localgov_workflows_notifications.content_by_owner']['title'] = $this->t('Content by owner');
+      $this->derivatives['localgov_workflows_notifications.contacts'] = $base_plugin_definition;
+      $this->derivatives['localgov_workflows_notifications.contacts']['route_name'] = 'entity.localgov_service_contact.collection';
+      $this->derivatives['localgov_workflows_notifications.contacts']['base_route'] = 'entity.localgov_service_contact.collection';
+      $this->derivatives['localgov_workflows_notifications.contacts']['parent_id'] = 'entity.localgov_service_contact.collection';
+      $this->derivatives['localgov_workflows_notifications.contacts']['title'] = $this->t('Contacts');
+
+      $this->derivatives['localgov_workflows_notifications.content'] = $base_plugin_definition;
+      $this->derivatives['localgov_workflows_notifications.content']['route_name'] = 'view.localgov_content_by_owner.page_1';
+      $this->derivatives['localgov_workflows_notifications.content']['parent_id'] = 'entity.localgov_service_contact.collection';
+      $this->derivatives['localgov_workflows_notifications.content']['base_route'] = 'entity.localgov_service_contact.collection';
+      $this->derivatives['localgov_workflows_notifications.content']['title'] = $this->t('Content');
     }
-    return $this->derivatives;
+    return parent::getDerivativeDefinitions($base_plugin_definition);
   }
 
 }
