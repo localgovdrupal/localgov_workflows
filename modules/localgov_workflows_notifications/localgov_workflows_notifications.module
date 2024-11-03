@@ -197,14 +197,15 @@ function localgov_workflows_notifications_entity_operation_alter(array &$operati
   if ($view instanceof ViewExecutable) {
     // Only add the operation link to the Service contact entity collection.
     if ($entity->bundle() === 'localgov_service_contact') {
-    $operations['service_contact_view_content'] = [
-      'title' => t('View content'),
-      // Point to a filtered version of the "Content by owner" View, using the View's contextual filter.
-      'url' => Url::fromRoute('view.localgov_content_by_owner.page_1', [
-        ['service-contact-id' => $entity->id()],
-      ]),
-      'weight' => 150,
-    ];
+      $operations['service_contact_view_content'] = [
+        'title' => t('View content'),
+        // Point to a filtered version of the "Content by owner" View,
+        //using the View's contextual filter.
+        'url' => Url::fromRoute('view.localgov_content_by_owner.page_1', [
+          ['service-contact-id' => $entity->id()],
+        ]),
+        'weight' => 150,
+      ];
     }
   }
 }
