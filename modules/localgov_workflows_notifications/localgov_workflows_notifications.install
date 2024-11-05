@@ -52,7 +52,7 @@ function localgov_workflows_notifications_update_10002(&$sandbox) {
   $config_installer = \Drupal::service('config.installer');
   $config_installer->installDefaultConfig('module', 'localgov_workflows_notifications');
   $optional_install_path = \Drupal::moduleHandler()
-    >getModule('localgov_workflows_notifications')
+    ->getModule('localgov_workflows_notifications')
     ->getPath() . '/config/optional';
   if (is_dir($optional_install_path)) {
     // Install the module's optional configuration that's not installed yet.
