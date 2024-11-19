@@ -5,6 +5,9 @@
  * Install functions for the LocalGov Review Notifications module.
  */
 
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\StorageInterface;
+
 /**
  * Implements hook_install().
  */
@@ -38,5 +41,22 @@ function localgov_workflows_notifications_update_10001(&$sandbox) {
   $timer = \Drupal::service('localgov_workflows_notifications.notification_timer');
   if (is_null($timer->getLastRun())) {
     $timer->update();
+  }
+}
+
+/**
+ * Enable Content By Owner View.
+ */
+function localgov_workflows_notifications_update_10002(&$sandbox) {
+  /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
+  $config_installer = \Drupal::service('config.installer');
+  $config_installer->installDefaultConfig('module', 'localgov_workflows_notifications');
+  $optional_install_path = \Drupal::moduleHandler()
+    ->getModule('localgov_workflows_notifications')
+    ->getPath() . '/config/optional';
+  if (is_dir($optional_install_path)) {
+    // Install the module's optional configuration that's not installed yet.
+    $storage = new FileStorage($optional_install_path, StorageInterface::DEFAULT_COLLECTION);
+    $config_installer->installOptionalConfig($storage);
   }
 }
