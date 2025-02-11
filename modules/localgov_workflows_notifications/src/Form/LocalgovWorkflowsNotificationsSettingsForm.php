@@ -31,7 +31,7 @@ final class LocalgovWorkflowsNotificationsSettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager
    *   The typed config manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, NotificationTimer $notification_timer, protected TypedConfigManagerInterface $typed_config_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, NotificationTimer $notification_timer, TypedConfigManagerInterface $typed_config_manager) {
     $this->timer = $notification_timer;
     parent::__construct($config_factory, $typed_config_manager);
   }
