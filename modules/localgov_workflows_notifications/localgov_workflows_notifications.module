@@ -109,7 +109,7 @@ function localgov_workflows_notifications_preprocess_field_multiple_value_form(&
   // Remove title and ordering from service contacts field.
   if ($variables['element']['#field_name'] === 'localgov_service_contacts') {
     if (isset($variables['table']['#header'])) {
-      unset($variables['table']['#header']);
+      $variables['table']['#header'] = [];
     }
     if (isset($variables['table']['#tabledrag'])) {
       unset($variables['table']['#tabledrag']);
