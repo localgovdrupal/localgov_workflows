@@ -59,9 +59,6 @@ class WorkflowNotification implements WorkflowNotificationInterface {
             break;
           }
         }
-        if ($queue_item !== FALSE && !$found) {
-          $queue->releaseItem($queue_item);
-        }
 
         if (!$found) {
 
