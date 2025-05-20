@@ -44,6 +44,7 @@ class WorkflowNotification implements WorkflowNotificationInterface {
 
         // Ensure the queue contains only one item for per service contact.
         $found = FALSE;
+        $claimed_items = [];
         while ($queue_item = $queue->claimItem(1)) {
           if ($queue_item->data->service_contact == $contact->id()) {
 
@@ -58,9 +59,15 @@ class WorkflowNotification implements WorkflowNotificationInterface {
             $found = TRUE;
             break;
           }
+          else {
+            $claimed_items[] = $queue_item;
+          }
         }
-        if ($queue_item !== FALSE && !$found) {
-          $queue->releaseItem($queue_item);
+
+        if ($claimed_items) {
+          foreach ($claimed_items as $queue_item) {
+            $queue->releaseItem($queue_item);
+          }
         }
 
         if (!$found) {
