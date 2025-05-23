@@ -42,11 +42,11 @@ class WorkflowNotification implements WorkflowNotificationInterface {
           continue;
         }
 
-        // Ensure the queue contains only one item for per service contact.
+        // Ensure the queue contains only one item for per service contact and type.
         $found = FALSE;
         $claimed_items = [];
         while ($queue_item = $queue->claimItem(1)) {
-          if ($queue_item->data->service_contact == $contact->id()) {
+          if ($queue_item->data->service_contact == $contact->id() && $queue_item->data->type == $type) {
 
             // Delete old item and create new one with additional entity.
             $queue->deleteItem($queue_item);

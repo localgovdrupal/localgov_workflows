@@ -166,7 +166,7 @@ class WorkflowNotificationTest extends KernelTestBase {
     $this->notifier->enqueue($node5, 'published');
     $this->assertEquals(2, $this->queue->numberOfItems());
 
-    // Enqueue a notification with different type.
+    // Ensure notifications are not duplicated.
     $node6 = $this->createNode([
       'type' => 'page',
       'title' => $this->randomMachineName(),
@@ -175,6 +175,17 @@ class WorkflowNotificationTest extends KernelTestBase {
       ],
     ]);
     $this->notifier->enqueue($node6, 'published');
+    $this->assertEquals(2, $this->queue->numberOfItems());
+
+    // Enqueue a notification with different type.
+    $node7 = $this->createNode([
+      'type' => 'page',
+      'title' => $this->randomMachineName(),
+      'localgov_service_contacts' => [
+        ['target_id' => $this->serviceContacts['enabled']->id()],
+      ],
+    ]);
+    $this->notifier->enqueue($node7, 'unpublished');
     $this->assertEquals(3, $this->queue->numberOfItems());
   }
 
