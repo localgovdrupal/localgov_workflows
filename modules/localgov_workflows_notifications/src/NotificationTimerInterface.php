@@ -23,6 +23,11 @@ interface NotificationTimerInterface {
   public function getLastRun(): ?int;
 
   /**
+   * Reset the notification timer.
+   */
+  public function reset(): void;
+
+  /**
    * Update the notification timer.
    */
   public function update(): void;

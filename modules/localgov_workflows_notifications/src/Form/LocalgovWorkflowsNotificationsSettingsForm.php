@@ -79,6 +79,23 @@ final class LocalgovWorkflowsNotificationsSettingsForm extends ConfigFormBase {
       '#default_value' => $this->config('localgov_workflows_notifications.settings')->get('email_frequency') ?? 1,
     ];
 
+    $form['test_options'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Testing options'),
+      '#open' => FALSE,
+    ];
+    $form['test_options']['reset_help'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('<p>Last run time: @time</p><p>Resetting the last run time will force notifications to be sent for all content needing review. This is useful when testing email notifications.</p>', [
+        '@time' => $this->timer->getLastRun() ? date('F j Y, g:ia', $this->timer->getLastRun()) : $this->t('Never'),
+      ]),
+    ];
+    $form['test_options']['reset_last_run'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Rest last run time'),
+      '#submit' => ['::resetLastRun'],
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -100,6 +117,13 @@ final class LocalgovWorkflowsNotificationsSettingsForm extends ConfigFormBase {
       ->save();
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Reset last run time submit handler.
+   */
+  public function resetLastRun(array &$form, FormStateInterface $form_state): void {
+    $this->timer->reset();
   }
 
 }
