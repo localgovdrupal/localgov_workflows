@@ -52,6 +52,13 @@ class NotificationTimer implements NotificationTimerInterface {
   /**
    * {@inheritdoc}
    */
+  public function reset(): void {
+    $this->state->set(self::LAST_RUN, 0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function update(): void {
     $request_time = $this->time->getRequestTime();
     $this->state->set(self::LAST_RUN, $request_time);
