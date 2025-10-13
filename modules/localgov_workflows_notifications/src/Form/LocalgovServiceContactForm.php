@@ -1,6 +1,7 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace Drupal\localgov_workflows_notifications\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
