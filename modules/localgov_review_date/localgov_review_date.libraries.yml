@@ -4,3 +4,4 @@ localgov_review_date.review_date:
   dependencies:
     - core/drupal
     - core/once
+    - core/drupal.entity-form
