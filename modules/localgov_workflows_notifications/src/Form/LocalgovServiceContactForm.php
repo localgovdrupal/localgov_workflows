@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types = 1);
 namespace Drupal\localgov_workflows_notifications\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
@@ -58,7 +59,7 @@ final class LocalgovServiceContactForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     parent::validateForm($form, $form_state);
 
     $uid = $form_state->getValue('user')[0]['target_id'];
