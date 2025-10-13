@@ -15,23 +15,25 @@
       );
 
       reviewDateForms.forEach((form) => {
-        form.drupalSetSummary(() => {
-          const lastReview = form.querySelector(
-            '.review-date-last-review',
-          )?.value;
-          const nextReview = form.querySelector(
-            '.review-date-next-review',
-          )?.value;
+        const summary = form.querySelector('summary .claro-details__summary-summary');
+        const lastReview = form.querySelector(
+          '.review-date-last-review',
+        )?.value;
+        const nextReview = form.querySelector(
+          '.review-date-next-review',
+        )?.value;
 
-          if (lastReview && nextReview) {
-            return Drupal.t('Last reviewed on @last<br>Next review on @next', {
+        if (lastReview && nextReview) {
+          summary.innerHTML = Drupal.t(
+            'Last reviewed on @last<br>Next review on @next',
+            {
               '@last': lastReview,
               '@next': nextReview,
-            });
-          }
-
-          return Drupal.t('Not reviewed yet');
-        });
+            },
+          );
+        } else {
+          summary.innerHTML = Drupal.t('Not reviewed yet');
+        }
       });
     },
   };
