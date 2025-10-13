@@ -65,8 +65,8 @@ class WorkflowNotification implements WorkflowNotificationInterface {
         }
 
         if ($claimed_items) {
-          foreach ($claimed_items as $queue_item) {
-            $queue->releaseItem($queue_item);
+          foreach ($claimed_items as $claimed_item) {
+            $queue->releaseItem($claimed_item);
           }
         }
 
