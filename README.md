@@ -1,4 +1,6 @@
-# LocalGov Drupal Workflows
+# [Archived] LocalGov Drupal Workflows
+
+This project is archived, please use the drupal.org version at https://www.drupal.org/project/localgov_workflows
 
 Default editorial workflow for LocalGov Drupal content.
 
