@@ -2,60 +2,95 @@
  * @file
  * Defines JavaScript behaviors for the review date widget.
  */
-(function ($, Drupal, drupalSettings) {
-
+(function reviewDatesScript(Drupal) {
   /**
    * Show review date summary on node edit form.
    */
   Drupal.behaviors.ReviewDateSummary = {
-    attach: function attach(context) {
-      const $context = $(context);
-      $context.find('.review-date-form').drupalSetSummary(function (context) {
-        const lastReview = $('.review-date-last-review').val();
-        const nextReview = $('.review-date-next-review').val();
+    attach: (context) => {
+      const reviewDateForms = once(
+        'allReviewDateForms',
+        '.review-date-form',
+        context,
+      );
+
+      reviewDateForms.forEach((form) => {
+        const summary = form.querySelector('summary .claro-details__summary-summary');
+        const lastReview = form.querySelector(
+          '.review-date-last-review',
+        )?.value;
+        const nextReview = form.querySelector(
+          '.review-date-next-review',
+        )?.value;
 
         if (lastReview && nextReview) {
-          return Drupal.t('Last reviewed on @last<br>Next review on @next', {
+          summary.innerHTML = Drupal.t(
+            'Last reviewed on @last<br>Next review on @next',
+            {
               '@last': lastReview,
               '@next': nextReview,
-            }
+            },
           );
+        } else {
+          summary.innerHTML = Drupal.t('Not reviewed yet');
         }
-
-        return Drupal.t('Not reviewed yet');
       });
-    }
+    },
   };
 
   /**
    * Update review date when next review date select changes.
    */
   Drupal.behaviors.ReviewDateNextReviewSelect = {
-    attach: function attach(context) {
-      $('.review-date-review-in').change(function() {
-        const reviewIn = parseInt($('.review-date-review-in').val());
-        let today = new Date();
-        const reviewDate = new Date(today.setMonth(today.getMonth() + reviewIn));
+    attach: (context) => {
+      const reviewInSelects = context.querySelectorAll(
+        '.review-date-review-in',
+      );
 
-        $('.review-date-review-date').val(reviewDate.toISOString().slice(0, 10));
+      reviewInSelects.forEach((select) => {
+        select.addEventListener('change', () => {
+          const reviewIn = parseInt(select.value, 10);
+          const today = new Date();
+          const reviewDate = new Date(
+            today.setMonth(today.getMonth() + reviewIn),
+          );
+
+          const reviewDateField = context.querySelector(
+            '.review-date-review-date',
+          );
+          if (reviewDateField) {
+            reviewDateField.value = reviewDate.toISOString().slice(0, 10);
+          }
+        });
       });
-    }
+    },
   };
 
   /**
    * Set content reviewed if content moderation state set to published.
    */
   Drupal.behaviors.ReviewDateSetReviewed = {
-    attach: function attach(context) {
-      $('#edit-moderation-state-0-state').change(function() {
-        const moderation_state = $('#edit-moderation-state-0-state').val();
-        if (moderation_state === 'published') {
-          const reviewed = $('.review-date-reviewed');
-          reviewed.prop('checked', true);
-          reviewed.trigger('change');
-        }
-      });
-    }
-  };
+    attach: (context) => {
+      const moderationStateField = context.querySelector(
+        '#edit-moderation-state-0-state',
+      );
 
-})(jQuery, Drupal, drupalSettings);
+      if (moderationStateField) {
+        moderationStateField.addEventListener('change', () => {
+          const moderationState = moderationStateField.value;
+          if (moderationState === 'published') {
+            const reviewedField = context.querySelector(
+              '.review-date-reviewed',
+            );
+            if (reviewedField) {
+              reviewedField.checked = true;
+              reviewedField.dispatchEvent(
+                new Event('change', { bubbles: true }),
+              );
+            }
+          }
+        });
+      }
+    },
+  };
+})(Drupal);
